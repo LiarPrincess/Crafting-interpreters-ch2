@@ -134,6 +134,10 @@ func defineExpr() {
 
     Template(name: "Variable", fields: [
       Field(name: "name", type: "String")
+    ]),
+    Template(name: "Assign", fields: [
+      Field(name: "name", type: "String"),
+      Field(name: "value", type: "Expr")
     ])
   ]
 

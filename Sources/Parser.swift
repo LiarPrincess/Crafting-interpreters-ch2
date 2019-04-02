@@ -7,6 +7,7 @@ enum ParseError: Error, CustomStringConvertible {
   case missingRightParen
   case missingVariableName
   case expectedExpression
+  case invalidAssignment
 
   var description: String {
     switch self {
@@ -14,6 +15,7 @@ enum ParseError: Error, CustomStringConvertible {
     case .missingRightParen: return "Expected ')' after expression."
     case .missingVariableName: return "Expected variable name."
     case .expectedExpression: return "Expected expression."
+    case .invalidAssignment: return "Invalid assignment target."
     }
   }
 }
@@ -92,7 +94,25 @@ class Parser {
   // MARK: - Expressions
 
   private func expression() throws -> Expr {
-    return try self.equality()
+    return try self.assignment()
+  }
+
+  private func assignment() throws -> Expr {
+    let expr = try self.equality()
+
+    if self.match(.equal) {
+      let equals = self.previous
+      let value = try self.assignment()
+
+      if let expr = expr as? VariableExpr {
+        let name = expr.name
+        return AssignExpr(name: name, value: value)
+      }
+
+      self.error(token: equals, error: .invalidAssignment)
+    }
+
+    return expr
   }
 
   private func equality() throws -> Expr {

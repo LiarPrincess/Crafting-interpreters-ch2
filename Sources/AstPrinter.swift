@@ -20,9 +20,9 @@ class AstPrinter: StmtVisitor, ExprVisitor {
   func visitVarStmt(_ stmt: VarStmt) throws -> String {
     switch stmt.initializer {
     case let .some(initializer):
-      return try parenthesize(name: "var @\(stmt.name)", exprs: initializer)
+      return try parenthesize(name: "decl @\(stmt.name)", exprs: initializer)
     case .none:
-      return try parenthesize(name: "var @\(stmt.name)")
+      return try parenthesize(name: "decl @\(stmt.name)")
     }
   }
 
@@ -59,7 +59,10 @@ class AstPrinter: StmtVisitor, ExprVisitor {
   }
 
   func visitVariableExpr(_ expr: VariableExpr) throws -> String {
-    return expr.name
+    return "@\(expr.name)"
+  }
+  func visitAssignExpr(_ expr: AssignExpr) throws -> String {
+    return try self.parenthesize(name: "set @\(expr.name)", exprs: expr.value)
   }
 
   private func parenthesize(name: String, exprs: Expr...) throws -> String {

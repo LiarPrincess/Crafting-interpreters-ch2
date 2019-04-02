@@ -157,6 +157,12 @@ class Interpreter: StmtVisitor, ExprVisitor {
     return try self.environment.get(expr.name)
   }
 
+  func visitAssignExpr(_ expr: AssignExpr) throws -> Any? {
+    let value = try self.evaluate(expr.value)
+    try self.environment.assign(expr.name, value)
+    return value
+  }
+
   // MARK: - Binary operations
 
   private typealias BinaryOperation<T> = (T, T) -> Any?

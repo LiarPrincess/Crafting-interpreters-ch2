@@ -9,6 +9,18 @@ struct Environment {
     self.values[name] = value
   }
 
+  mutating func assign(_ name: String, _ value: Any?) throws {
+    let exists = self.values[name] != nil
+    if exists {
+      values[name] = value
+      return
+    }
+
+    // todo: proper error handling
+    let token = Token(type: .identifier("name"), location: SourceLocation(line: 0, column: 0))
+    throw RuntimeError(token: token, type: .undefinedVariable(name))
+  }
+
   func get(_ name: String) throws -> Any? {
     if let value = self.values[name] {
       return value
