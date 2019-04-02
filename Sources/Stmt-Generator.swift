@@ -14,30 +14,13 @@ private struct Template {
   let fields: [Field]
 }
 
-private let protocolName = "Expr"
+private let protocolName = "Stmt"
 
 private let templates = [
-  Template(name: "Bool", fields: [
-    Field(name: "value", type: "Bool")
+  Template(name: "Print", fields: [
+    Field(name: "expr", type: "Expr")
   ]),
-  Template(name: "Number", fields: [
-    Field(name: "value", type: "Double")
-  ]),
-  Template(name: "String", fields: [
-    Field(name: "value", type: "String")
-  ]),
-  Template(name: "Nil", fields: []),
-
-  Template(name: "Unary", fields: [
-    Field(name: "op",    type: "Token"),
-    Field(name: "right", type: "Expr")
-  ]),
-  Template(name: "Binary", fields: [
-    Field(name: "op",    type: "Token"),
-    Field(name: "left",  type: "Expr"),
-    Field(name: "right", type: "Expr"),
-  ]),
-  Template(name: "Grouping", fields: [
+  Template(name: "Expression", fields: [
     Field(name: "expr", type: "Expr")
   ])
 ]
@@ -63,23 +46,21 @@ private func getType(_ template: Template) -> String {
 
 private func defineVisitorProtocol() {
   print("protocol \(visitorName) {")
-  print("  associatedtype Result")
-  print("")
 
   for template in templates {
     let type = getType(template)
-    print("  @discardableResult func visit\(type)(_ \(protocolNameLowercase): \(type)) throws -> Result")
+    print("  func visit\(type)(_ \(protocolNameLowercase): \(type)) throws")
   }
   print("}")
   print("")
 
   print("extension \(visitorName) {")
-  print("  func visit(_ \(protocolNameLowercase): \(protocolName)) throws -> Result {")
+  print("  func visit(_ \(protocolNameLowercase): \(protocolName)) throws {")
   print("    switch \(protocolNameLowercase) {")
   for template in templates {
     let type = getType(template)
     print("    case let \(protocolNameLowercase) as \(type):")
-    print("      return try self.visit\(type)(\(protocolNameLowercase))")
+    print("      try self.visit\(type)(\(protocolNameLowercase))")
   }
   print("    default:")
   print("      fatalError(\"Unknown \(protocolNameLowercase) \\(\(protocolNameLowercase))\")")
@@ -91,7 +72,7 @@ private func defineVisitorProtocol() {
 
 private func defineBaseProtcol() {
   print("protocol \(protocolName) {")
-  print("  func accept<V: \(visitorName), R>(_ visitor: V) throws -> R where R == V.Result")
+  print("  func accept(_ visitor: \(visitorName)) throws")
   print("}")
   print("")
 }
@@ -106,8 +87,8 @@ private func defineTypes() {
     }
     print("")
 
-    print("  func accept<V: \(visitorName), R>(_ visitor: V) throws -> R where R == V.Result {")
-    print("    return try visitor.visit\(type)(self)")
+    print("  func accept(_ visitor: \(visitorName)) throws {")
+    print("    try visitor.visit\(type)(self)")
     print("  }")
 
     print("}")
@@ -115,7 +96,7 @@ private func defineTypes() {
   }
 }
 
-func defineExpr() {
+func defineStmt() {
   defineLicense()
   defineVisitorProtocol()
   defineBaseProtcol()

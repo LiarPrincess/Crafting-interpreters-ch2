@@ -17,24 +17,43 @@ struct RuntimeError: Error {
   let type:  RuntimeErrorType
 }
 
-class Interpreter: ExprVisitor {
+class Interpreter: StmtVisitor, ExprVisitor {
 
   typealias Result = Any?
 
-  func interpret(_ expr: Expr) -> Any? {
+  func interpret(_ statements: [Stmt]) {
     do {
-      return try self.visit(expr)
+      for statement in statements {
+        try self.execute(statement)
+      }
     }
     catch let error as RuntimeError {
       let location = error.token.location
       let message = String(describing: error.type)
       Lox.runtimeError(location: location, message: message)
-      return nil
     }
     catch {
       fatalError("Unknown error")
     }
   }
+
+  private func execute(_ statement: Stmt) throws {
+    try statement.accept(self)
+  }
+
+  // MARK: - Statements
+
+  func visitPrintStmt(_ stmt: PrintStmt) throws {
+    let value = try self.evaluate(stmt.expr)
+    let valueString = self.getDebugDescription(value)
+    print("<\(valueString)>")
+  }
+
+  func visitExpressionStmt(_ stmt: ExpressionStmt) throws {
+    _ = try self.evaluate(stmt.expr)
+  }
+
+  // MARK: - Expressions
 
   func visitBoolExpr(_ expr: BoolExpr) throws -> Any? {
     return expr.value
@@ -92,7 +111,9 @@ class Interpreter: ExprVisitor {
         return try self.performBinaryStringOperation(token, String(describing: left!), String(describing: right!), +)
       }
 
-      throw RuntimeError(token: token, type: .invalidOperandType("\(left.self.debugDescription) and \(right.self.debugDescription)"))
+      let leftDescription  = self.getDebugDescription(left)
+      let rightDescription = self.getDebugDescription(right)
+      throw RuntimeError(token: token, type: .invalidOperandType("\(leftDescription) and \(rightDescription)"))
 
     case .minus: return try self.performBinaryNumberOperation(token, left, right, -)
     case .slash: return try self.performBinaryNumberOperation(token, left, right, /)
@@ -174,7 +195,8 @@ class Interpreter: ExprVisitor {
 
   private func checkBoolOperand(_ token: Token, _ operand: Any?) throws -> Bool {
     guard self.isBoolOperand(operand) else {
-      throw RuntimeError(token: token, type: .invalidOperandType(operand.self.debugDescription))
+      let operandDescription = self.getDebugDescription(operand)
+      throw RuntimeError(token: token, type: .invalidOperandType(operandDescription))
     }
 
     return operand as! Bool
@@ -182,7 +204,8 @@ class Interpreter: ExprVisitor {
 
   private func checkNumberOperand(_ token: Token, _ operand: Any?) throws -> Double {
     guard self.isNumberOperand(operand) else {
-      throw RuntimeError(token: token, type: .invalidOperandType(operand.self.debugDescription))
+      let operandDescription = self.getDebugDescription(operand)
+      throw RuntimeError(token: token, type: .invalidOperandType(operandDescription))
     }
 
     return operand as! Double
@@ -190,9 +213,24 @@ class Interpreter: ExprVisitor {
 
   private func checkStringOperand(_ token: Token, _ operand: Any?) throws -> String {
     guard self.isStringOperand(operand) else {
-      throw RuntimeError(token: token, type: .invalidOperandType(operand.self.debugDescription))
+      let operandDescription = self.getDebugDescription(operand)
+      throw RuntimeError(token: token, type: .invalidOperandType(operandDescription))
     }
 
     return operand as! String
+  }
+
+  // MARK: - Errors
+
+  private func getDebugDescription(_ value: Any?) -> String {
+    guard let value = value else {
+      return "nil"
+    }
+
+    if self.isStringOperand(value) {
+      return "\"\(value)\""
+    }
+
+    return String(describing: value)
   }
 }

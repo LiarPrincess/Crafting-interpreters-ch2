@@ -15,7 +15,6 @@ protocol ExprVisitor {
 }
 
 extension ExprVisitor {
-
   func visit(_ expr: Expr) throws -> Result {
     switch expr {
     case let expr as BoolExpr:

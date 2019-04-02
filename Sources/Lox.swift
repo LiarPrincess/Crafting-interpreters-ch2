@@ -58,18 +58,18 @@ class Lox {
 
     print("Parsing -> AST")
     let parser = Parser(tokens)
-    guard let expr = parser.parse() else {
-      print("Error when parsing!")
+    guard let statements = parser.parse() else {
       return
     }
 
     let printer = AstPrinter()
-    print(try! printer.visit(expr))
+    for statement in statements {
+      try! printer.visit(statement)
+    }
     print("")
 
     print("Result")
-    let result = interpreter.interpret(expr)
-    print(result ?? "nil")
+    interpreter.interpret(statements)
   }
 
   // MARK: - Errors

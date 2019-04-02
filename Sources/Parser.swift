@@ -3,11 +3,13 @@
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
 enum ParseError: Error, CustomStringConvertible {
+  case missingSemicolon
   case missingRightParen
   case expectedExpression
 
   var description: String {
     switch self {
+    case .missingSemicolon: return "Expected ';'."
     case .missingRightParen: return "Expected ')' after expression."
     case .expectedExpression: return "Expected expression."
     }
@@ -22,13 +24,40 @@ class Parser {
     self.tokens = tokens
   }
 
-  func parse() -> Expr? {
+  func parse() -> [Stmt]? {
     do {
-      return try self.expression()
+      var statements = [Stmt]()
+      while !self.isAtEnd {
+        let statement = try self.statement()
+        statements.append(statement)
+      }
+      return statements
     }
     catch {
       return nil
     }
+  }
+
+  // MARK: - Statements
+
+  private func statement() throws -> Stmt {
+    if self.match(.print) {
+      return try self.printStatement()
+    }
+
+    return try self.expressionStatement()
+  }
+
+  private func printStatement() throws -> Stmt {
+    let expr = try self.expression()
+    try self.consumeOrThrow(type: .semicolon, error: .missingSemicolon)
+    return PrintStmt(expr: expr)
+  }
+
+  private func expressionStatement() throws -> Stmt {
+    let expr = try self.expression()
+    try self.consumeOrThrow(type: .semicolon, error: .missingSemicolon)
+    return ExpressionStmt(expr: expr)
   }
 
   // MARK: - Expressions

@@ -2,9 +2,21 @@
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-class AstPrinter: ExprVisitor {
+class AstPrinter: StmtVisitor, ExprVisitor {
 
   typealias Result = String
+
+  // MARK: - Statements
+
+  func visitPrintStmt(_ stmt: PrintStmt) throws {
+    print(stmt.expr)
+  }
+
+  func visitExpressionStmt(_ stmt: ExpressionStmt) throws {
+    print(stmt.expr)
+  }
+
+  // MARK: - Expressions
 
   func visitBoolExpr(_ expr: BoolExpr) throws -> String {
     return String(describing: expr.value)

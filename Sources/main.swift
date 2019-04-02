@@ -4,8 +4,9 @@
 
 import Foundation
 
-//defineAst()
+//defineExpr()
+//defineStmt()
 
 let args = CommandLine.arguments.dropFirst()
-//try Lox.main(["/Users/michal/Documents/Xcode/Lox/main.lox"])
-try Lox.main(Array(args))
+try Lox.main(["/Users/michal/Documents/Xcode/Lox/main.lox"])
+//try Lox.main(Array(args))
