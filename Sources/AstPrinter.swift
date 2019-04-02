@@ -14,7 +14,16 @@ class AstPrinter: StmtVisitor, ExprVisitor {
   }
 
   func visitExpressionStmt(_ stmt: ExpressionStmt) throws -> String {
-    return try parenthesize(name: "exprStmt", exprs: stmt.expr)
+    return try parenthesize(name: "expr", exprs: stmt.expr)
+  }
+
+  func visitVarStmt(_ stmt: VarStmt) throws -> String {
+    switch stmt.initializer {
+    case let .some(initializer):
+      return try parenthesize(name: "var @\(stmt.name)", exprs: initializer)
+    case .none:
+      return try parenthesize(name: "var @\(stmt.name)")
+    }
   }
 
   // MARK: - Expressions
@@ -47,6 +56,10 @@ class AstPrinter: StmtVisitor, ExprVisitor {
 
   func visitGroupingExpr(_ expr: GroupingExpr) throws -> String {
     return try self.parenthesize(name: "group", exprs: expr.expr)
+  }
+
+  func visitVariableExpr(_ expr: VariableExpr) throws -> String {
+    return expr.name
   }
 
   private func parenthesize(name: String, exprs: Expr...) throws -> String {

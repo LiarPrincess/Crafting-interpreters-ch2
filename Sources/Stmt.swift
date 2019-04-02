@@ -7,6 +7,7 @@ protocol StmtVisitor {
 
   @discardableResult func visitPrintStmt(_ stmt: PrintStmt) throws -> StmtResult
   @discardableResult func visitExpressionStmt(_ stmt: ExpressionStmt) throws -> StmtResult
+  @discardableResult func visitVarStmt(_ stmt: VarStmt) throws -> StmtResult
 }
 
 extension StmtVisitor {
@@ -16,6 +17,8 @@ extension StmtVisitor {
       return try self.visitPrintStmt(stmt)
     case let stmt as ExpressionStmt:
       return try self.visitExpressionStmt(stmt)
+    case let stmt as VarStmt:
+      return try self.visitVarStmt(stmt)
     default:
       fatalError("Unknown stmt \(stmt)")
     }
@@ -39,5 +42,14 @@ struct ExpressionStmt: Stmt {
 
   func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
     return try visitor.visitExpressionStmt(self)
+  }
+}
+
+struct VarStmt: Stmt {
+  let name: String
+  let initializer: Expr?
+
+  func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
+    return try visitor.visitVarStmt(self)
   }
 }

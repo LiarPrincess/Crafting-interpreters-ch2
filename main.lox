@@ -2,3 +2,8 @@ print "one";
 print true;
 print 2 + 1;
 print (1+(2-4))*3;
+
+var a = 1;
+var b = 2;
+print a + b;
+

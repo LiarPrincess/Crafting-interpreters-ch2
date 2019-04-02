@@ -3,10 +3,12 @@
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
 enum RuntimeErrorType: CustomStringConvertible {
+  case undefinedVariable(String)
   case invalidOperandType(String)
 
   var description: String {
     switch self {
+    case let .undefinedVariable(name): return "Undefined variable: \(name)."
     case let .invalidOperandType(type): return "Invalid operand type: \(type)."
     }
   }
@@ -21,6 +23,8 @@ class Interpreter: StmtVisitor, ExprVisitor {
 
   typealias StmtResult = Void
   typealias ExprResult = Any?
+
+  private var environment = Environment()
 
   func interpret(_ statements: [Stmt]) {
     do {
@@ -47,11 +51,20 @@ class Interpreter: StmtVisitor, ExprVisitor {
   func visitPrintStmt(_ stmt: PrintStmt) throws -> Void {
     let value = try self.evaluate(stmt.expr)
     let valueString = self.getDebugDescription(value)
-    print("<\(valueString)>")
+    print(valueString)
   }
 
   func visitExpressionStmt(_ stmt: ExpressionStmt) throws -> Void {
     _ = try self.evaluate(stmt.expr)
+  }
+
+  func visitVarStmt(_ stmt: VarStmt) throws -> Void {
+    var value: Any? = nil
+    if let initializer = stmt.initializer {
+      value = try self.evaluate(initializer)
+    }
+
+    self.environment.define(stmt.name, value)
   }
 
   // MARK: - Expressions
@@ -132,6 +145,19 @@ class Interpreter: StmtVisitor, ExprVisitor {
       return nil
     }
   }
+  func visitGroupingExpr(_ expr: GroupingExpr) throws -> Any? {
+    return try self.evaluate(expr.expr)
+  }
+
+  private func evaluate(_ expr: Expr) throws -> Any? {
+    return try expr.accept(self)
+  }
+
+  func visitVariableExpr(_ expr: VariableExpr) throws -> Any? {
+    return try self.environment.get(expr.name)
+  }
+
+  // MARK: - Binary operations
 
   private typealias BinaryOperation<T> = (T, T) -> Any?
 
@@ -170,14 +196,6 @@ class Interpreter: StmtVisitor, ExprVisitor {
     }
 
     return true
-  }
-
-  func visitGroupingExpr(_ expr: GroupingExpr) throws -> Any? {
-    return try self.evaluate(expr.expr)
-  }
-
-  private func evaluate(_ expr: Expr) throws -> Any? {
-    return try expr.accept(self)
   }
 
   // MARK: - Checks

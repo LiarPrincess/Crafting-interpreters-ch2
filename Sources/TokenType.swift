@@ -133,7 +133,7 @@ extension TokenType: CustomStringConvertible {
     case .lessEqual: return "<="
 
     // Literals
-    case let .identifier(value): return "(\(value))"
+    case let .identifier(value): return "@\(value)"
     case let .string(value): return "\"\(value)\""
     case let .number(value): return String(describing: value)
 

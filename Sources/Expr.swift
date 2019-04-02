@@ -12,6 +12,7 @@ protocol ExprVisitor {
   @discardableResult func visitUnaryExpr(_ expr: UnaryExpr) throws -> ExprResult
   @discardableResult func visitBinaryExpr(_ expr: BinaryExpr) throws -> ExprResult
   @discardableResult func visitGroupingExpr(_ expr: GroupingExpr) throws -> ExprResult
+  @discardableResult func visitVariableExpr(_ expr: VariableExpr) throws -> ExprResult
 }
 
 extension ExprVisitor {
@@ -31,6 +32,8 @@ extension ExprVisitor {
       return try self.visitBinaryExpr(expr)
     case let expr as GroupingExpr:
       return try self.visitGroupingExpr(expr)
+    case let expr as VariableExpr:
+      return try self.visitVariableExpr(expr)
     default:
       fatalError("Unknown expr \(expr)")
     }
@@ -98,3 +101,12 @@ struct GroupingExpr: Expr {
     return try visitor.visitGroupingExpr(self)
   }
 }
+
+struct VariableExpr: Expr {
+  let name: String
+
+  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+    return try visitor.visitVariableExpr(self)
+  }
+}
+

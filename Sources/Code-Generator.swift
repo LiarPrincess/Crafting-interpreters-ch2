@@ -130,6 +130,10 @@ func defineExpr() {
     ]),
     Template(name: "Grouping", fields: [
       Field(name: "expr", type: "Expr")
+    ]),
+
+    Template(name: "Variable", fields: [
+      Field(name: "name", type: "String")
     ])
   ]
 
@@ -145,6 +149,10 @@ func defineStmt() {
     ]),
     Template(name: "Expression", fields: [
       Field(name: "expr", type: "Expr")
+    ]),
+    Template(name: "Var", fields: [
+      Field(name: "name", type: "String"),
+      Field(name: "initializer", type: "Expr?")
     ])
   ]
 

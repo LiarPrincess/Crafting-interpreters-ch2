@@ -68,6 +68,10 @@ class Lox {
     }
     print("")
 
+    if hadError {
+      return
+    }
+
     print("Result")
     interpreter.interpret(statements)
   }

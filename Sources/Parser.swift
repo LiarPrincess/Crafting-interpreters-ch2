@@ -5,12 +5,14 @@
 enum ParseError: Error, CustomStringConvertible {
   case missingSemicolon
   case missingRightParen
+  case missingVariableName
   case expectedExpression
 
   var description: String {
     switch self {
-    case .missingSemicolon: return "Expected ';'."
+    case .missingSemicolon: return "Expected ';' after statement."
     case .missingRightParen: return "Expected ')' after expression."
+    case .missingVariableName: return "Expected variable name."
     case .expectedExpression: return "Expected expression."
     }
   }
@@ -25,20 +27,47 @@ class Parser {
   }
 
   func parse() -> [Stmt]? {
-    do {
-      var statements = [Stmt]()
-      while !self.isAtEnd {
-        let statement = try self.statement()
+    var statements = [Stmt]()
+    while !self.isAtEnd {
+      if let statement = self.declaration() {
         statements.append(statement)
       }
-      return statements
+    }
+    return statements
+  }
+
+  // MARK: - Statements
+
+  private func declaration() -> Stmt? {
+    do {
+      if self.match(.var) {
+        return try self.varDeclaration()
+      }
+
+      return try self.statement()
     }
     catch {
+      self.synchronize()
       return nil
     }
   }
 
-  // MARK: - Statements
+  private func varDeclaration() throws -> Stmt {
+    let current = self.peek
+
+    guard case let TokenType.identifier(name) = current.type else {
+      throw ParseError.missingVariableName
+    }
+    self.advance()
+
+    var expr: Expr?
+    if self.match(.equal) {
+      expr = try self.expression()
+    }
+
+    try self.consumeOrThrow(type: .semicolon, error: .missingSemicolon)
+    return VarStmt(name: name, initializer: expr)
+  }
 
   private func statement() throws -> Stmt {
     if self.match(.print) {
@@ -136,6 +165,11 @@ class Parser {
       return StringExpr(value: value)
     }
 
+    if case let TokenType.identifier(name) = current.type {
+      self.advance()
+      return VariableExpr(name: name)
+    }
+
     if self.match(.leftParen) {
       let expr = try self.expression()
       try self.consumeOrThrow(type: .rightParen, error: .missingRightParen)
@@ -207,23 +241,23 @@ class Parser {
 
   // MARK: - Errors
 
+  private func synchronize() {
+    self.advance()
+
+    while !self.isAtEnd {
+      if self.previous.type == .semicolon {
+        return
+      }
+
+      switch (self.peek.type) {
+      case .class, .fun, .var, .for, .if, .while, .print, .return: return
+      default: self.advance()
+      }
+    }
+  }
+
   private func error(token: Token, error: ParseError) -> ParseError {
     Lox.error(location: token.location, message: error.description)
     return error
   }
-
-  //  private func synchronize() {
-  //    self.advance()
-  //
-  //    while !self.isAtEnd {
-  //      if self.previous.type == .semicolon {
-  //        return
-  //      }
-  //
-  //      switch (self.peek.type) {
-  //      case .class, .fun, .var, .for, .if, .while, .print, .return: return
-  //      default: self.advance()
-  //      }
-  //    }
-  //  }
 }
