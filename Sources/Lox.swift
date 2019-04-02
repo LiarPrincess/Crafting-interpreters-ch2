@@ -64,7 +64,7 @@ class Lox {
 
     let printer = AstPrinter()
     for statement in statements {
-      try! printer.visit(statement)
+      print(try! printer.visit(statement))
     }
     print("")
 

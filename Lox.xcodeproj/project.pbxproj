@@ -21,11 +21,10 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		90CA2F0E225358CD0032A643 /* Expr-Generator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F0D225358CD0032A643 /* Expr-Generator.swift */; };
+		90CA2F0E225358CD0032A643 /* Code-Generator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F0D225358CD0032A643 /* Code-Generator.swift */; };
 		90CA2F102253686C0032A643 /* AstPrinter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F0F2253686C0032A643 /* AstPrinter.swift */; };
 		90CA2F12225375E70032A643 /* Interpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F11225375E70032A643 /* Interpreter.swift */; };
 		90CA2F142253B8420032A643 /* Stmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F132253B8420032A643 /* Stmt.swift */; };
-		90CA2F162253C8520032A643 /* Stmt-Generator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F152253C8520032A643 /* Stmt-Generator.swift */; };
 		OBJ_27 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_8 /* Expr.swift */; };
 		OBJ_28 /* Lox.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Lox.swift */; };
 		OBJ_29 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Parser.swift */; };
@@ -58,11 +57,10 @@
 
 /* Begin PBXFileReference section */
 		90CA2F0B2252DD5B0032A643 /* main.lox */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.lox; sourceTree = "<group>"; };
-		90CA2F0D225358CD0032A643 /* Expr-Generator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Expr-Generator.swift"; sourceTree = "<group>"; };
+		90CA2F0D225358CD0032A643 /* Code-Generator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Code-Generator.swift"; sourceTree = "<group>"; };
 		90CA2F0F2253686C0032A643 /* AstPrinter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstPrinter.swift; sourceTree = "<group>"; };
 		90CA2F11225375E70032A643 /* Interpreter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interpreter.swift; sourceTree = "<group>"; };
 		90CA2F132253B8420032A643 /* Stmt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stmt.swift; sourceTree = "<group>"; };
-		90CA2F152253C8520032A643 /* Stmt-Generator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Stmt-Generator.swift"; sourceTree = "<group>"; };
 		"Lox::Lox::Product" /* Lox */ = {isa = PBXFileReference; lastKnownFileType = text; path = Lox; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Lox::LoxTests::Product" /* LoxTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = LoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_10 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
@@ -130,9 +128,7 @@
 			children = (
 				OBJ_9 /* Lox.swift */,
 				OBJ_8 /* Expr.swift */,
-				90CA2F0D225358CD0032A643 /* Expr-Generator.swift */,
 				90CA2F132253B8420032A643 /* Stmt.swift */,
-				90CA2F152253C8520032A643 /* Stmt-Generator.swift */,
 				OBJ_11 /* Scanner.swift */,
 				OBJ_10 /* Parser.swift */,
 				90CA2F11225375E70032A643 /* Interpreter.swift */,
@@ -140,6 +136,7 @@
 				OBJ_13 /* Token.swift */,
 				OBJ_14 /* TokenType.swift */,
 				90CA2F0F2253686C0032A643 /* AstPrinter.swift */,
+				90CA2F0D225358CD0032A643 /* Code-Generator.swift */,
 				OBJ_15 /* main.swift */,
 			);
 			path = Sources;
@@ -230,12 +227,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				90CA2F0E225358CD0032A643 /* Expr-Generator.swift in Sources */,
+				90CA2F0E225358CD0032A643 /* Code-Generator.swift in Sources */,
 				90CA2F102253686C0032A643 /* AstPrinter.swift in Sources */,
 				OBJ_27 /* Expr.swift in Sources */,
 				OBJ_28 /* Lox.swift in Sources */,
 				OBJ_29 /* Parser.swift in Sources */,
-				90CA2F162253C8520032A643 /* Stmt-Generator.swift in Sources */,
 				90CA2F142253B8420032A643 /* Stmt.swift in Sources */,
 				90CA2F12225375E70032A643 /* Interpreter.swift in Sources */,
 				OBJ_30 /* Scanner.swift in Sources */,

@@ -19,7 +19,8 @@ struct RuntimeError: Error {
 
 class Interpreter: StmtVisitor, ExprVisitor {
 
-  typealias Result = Any?
+  typealias StmtResult = Void
+  typealias ExprResult = Any?
 
   func interpret(_ statements: [Stmt]) {
     do {
@@ -43,13 +44,13 @@ class Interpreter: StmtVisitor, ExprVisitor {
 
   // MARK: - Statements
 
-  func visitPrintStmt(_ stmt: PrintStmt) throws {
+  func visitPrintStmt(_ stmt: PrintStmt) throws -> Void {
     let value = try self.evaluate(stmt.expr)
     let valueString = self.getDebugDescription(value)
     print("<\(valueString)>")
   }
 
-  func visitExpressionStmt(_ stmt: ExpressionStmt) throws {
+  func visitExpressionStmt(_ stmt: ExpressionStmt) throws -> Void {
     _ = try self.evaluate(stmt.expr)
   }
 

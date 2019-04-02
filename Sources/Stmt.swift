@@ -3,17 +3,19 @@
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
 protocol StmtVisitor {
-  func visitPrintStmt(_ stmt: PrintStmt) throws
-  func visitExpressionStmt(_ stmt: ExpressionStmt) throws
+  associatedtype StmtResult
+
+  @discardableResult func visitPrintStmt(_ stmt: PrintStmt) throws -> StmtResult
+  @discardableResult func visitExpressionStmt(_ stmt: ExpressionStmt) throws -> StmtResult
 }
 
 extension StmtVisitor {
-  func visit(_ stmt: Stmt) throws {
+  func visit(_ stmt: Stmt) throws -> StmtResult {
     switch stmt {
     case let stmt as PrintStmt:
-      try self.visitPrintStmt(stmt)
+      return try self.visitPrintStmt(stmt)
     case let stmt as ExpressionStmt:
-      try self.visitExpressionStmt(stmt)
+      return try self.visitExpressionStmt(stmt)
     default:
       fatalError("Unknown stmt \(stmt)")
     }
@@ -21,21 +23,21 @@ extension StmtVisitor {
 }
 
 protocol Stmt {
-  func accept(_ visitor: StmtVisitor) throws
+  func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult
 }
 
 struct PrintStmt: Stmt {
   let expr: Expr
 
-  func accept(_ visitor: StmtVisitor) throws {
-    try visitor.visitPrintStmt(self)
+  func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
+    return try visitor.visitPrintStmt(self)
   }
 }
 
 struct ExpressionStmt: Stmt {
   let expr: Expr
 
-  func accept(_ visitor: StmtVisitor) throws {
-    try visitor.visitExpressionStmt(self)
+  func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
+    return try visitor.visitExpressionStmt(self)
   }
 }

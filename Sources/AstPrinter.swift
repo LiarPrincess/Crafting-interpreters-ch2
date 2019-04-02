@@ -4,16 +4,17 @@
 
 class AstPrinter: StmtVisitor, ExprVisitor {
 
-  typealias Result = String
+  typealias StmtResult = String
+  typealias ExprResult = String
 
   // MARK: - Statements
 
-  func visitPrintStmt(_ stmt: PrintStmt) throws {
-    print(stmt.expr)
+  func visitPrintStmt(_ stmt: PrintStmt) throws -> String {
+    return try parenthesize(name: "print", exprs: stmt.expr)
   }
 
-  func visitExpressionStmt(_ stmt: ExpressionStmt) throws {
-    print(stmt.expr)
+  func visitExpressionStmt(_ stmt: ExpressionStmt) throws -> String {
+    return try parenthesize(name: "exprStmt", exprs: stmt.expr)
   }
 
   // MARK: - Expressions

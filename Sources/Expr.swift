@@ -3,19 +3,19 @@
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
 protocol ExprVisitor {
-  associatedtype Result
+  associatedtype ExprResult
 
-  @discardableResult func visitBoolExpr(_ expr: BoolExpr) throws -> Result
-  @discardableResult func visitNumberExpr(_ expr: NumberExpr) throws -> Result
-  @discardableResult func visitStringExpr(_ expr: StringExpr) throws -> Result
-  @discardableResult func visitNilExpr(_ expr: NilExpr) throws -> Result
-  @discardableResult func visitUnaryExpr(_ expr: UnaryExpr) throws -> Result
-  @discardableResult func visitBinaryExpr(_ expr: BinaryExpr) throws -> Result
-  @discardableResult func visitGroupingExpr(_ expr: GroupingExpr) throws -> Result
+  @discardableResult func visitBoolExpr(_ expr: BoolExpr) throws -> ExprResult
+  @discardableResult func visitNumberExpr(_ expr: NumberExpr) throws -> ExprResult
+  @discardableResult func visitStringExpr(_ expr: StringExpr) throws -> ExprResult
+  @discardableResult func visitNilExpr(_ expr: NilExpr) throws -> ExprResult
+  @discardableResult func visitUnaryExpr(_ expr: UnaryExpr) throws -> ExprResult
+  @discardableResult func visitBinaryExpr(_ expr: BinaryExpr) throws -> ExprResult
+  @discardableResult func visitGroupingExpr(_ expr: GroupingExpr) throws -> ExprResult
 }
 
 extension ExprVisitor {
-  func visit(_ expr: Expr) throws -> Result {
+  func visit(_ expr: Expr) throws -> ExprResult {
     switch expr {
     case let expr as BoolExpr:
       return try self.visitBoolExpr(expr)
@@ -38,13 +38,13 @@ extension ExprVisitor {
 }
 
 protocol Expr {
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.Result
+  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult
 }
 
 struct BoolExpr: Expr {
   let value: Bool
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.Result {
+  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitBoolExpr(self)
   }
 }
@@ -52,7 +52,7 @@ struct BoolExpr: Expr {
 struct NumberExpr: Expr {
   let value: Double
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.Result {
+  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitNumberExpr(self)
   }
 }
@@ -60,14 +60,14 @@ struct NumberExpr: Expr {
 struct StringExpr: Expr {
   let value: String
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.Result {
+  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitStringExpr(self)
   }
 }
 
 struct NilExpr: Expr {
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.Result {
+  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitNilExpr(self)
   }
 }
@@ -76,7 +76,7 @@ struct UnaryExpr: Expr {
   let op: Token
   let right: Expr
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.Result {
+  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitUnaryExpr(self)
   }
 }
@@ -86,7 +86,7 @@ struct BinaryExpr: Expr {
   let left: Expr
   let right: Expr
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.Result {
+  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitBinaryExpr(self)
   }
 }
@@ -94,7 +94,7 @@ struct BinaryExpr: Expr {
 struct GroupingExpr: Expr {
   let expr: Expr
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.Result {
+  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitGroupingExpr(self)
   }
 }
