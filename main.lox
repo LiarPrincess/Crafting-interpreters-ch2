@@ -39,8 +39,20 @@ var a = 1;
   print a;
 }
 
+print "While loop:";
 var loopControl = 5;
 while (loopControl > 0) {
   print "loop: " + loopControl;
   loopControl = loopControl - 1;
+}
+
+print "For loop (Fibonacci):";
+var a = 0;
+var b = 1;
+
+while (a < 10000) {
+  print a;
+  var temp = a;
+  a = b;
+  b = temp + b;
 }
