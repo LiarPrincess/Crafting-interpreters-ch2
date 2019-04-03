@@ -44,12 +44,25 @@ class Interpreter: StmtVisitor, ExprVisitor {
     try statement.accept(self)
   }
 
+  private func executeBlock(_ statements: [Stmt], in environment: Environment) throws {
+    let previous = self.environment
+    defer { self.environment = previous }
+
+    self.environment = environment
+    try statements.forEach { try self.execute($0) }
+  }
+
   // MARK: - Statements
 
   func visitPrintStmt(_ stmt: PrintStmt) throws {
     let value = try self.evaluate(stmt.expr)
     let valueString = self.getDebugDescription(value)
     print(valueString)
+  }
+
+  func visitBlockStmt(_ stmt: BlockStmt) throws {
+    let environment = Environment(parent: self.environment)
+    try self.executeBlock(stmt.statements, in: environment)
   }
 
   func visitExpressionStmt(_ stmt: ExpressionStmt) throws {

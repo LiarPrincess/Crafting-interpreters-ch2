@@ -11,6 +11,8 @@ protocol StmtVisitor {
   func visitExpressionStmt(_ stmt: ExpressionStmt) throws -> StmtResult
   @discardableResult
   func visitVarStmt(_ stmt: VarStmt) throws -> StmtResult
+  @discardableResult
+  func visitBlockStmt(_ stmt: BlockStmt) throws -> StmtResult
 }
 
 extension StmtVisitor {
@@ -22,6 +24,8 @@ extension StmtVisitor {
       return try self.visitExpressionStmt(stmt)
     case let stmt as VarStmt:
       return try self.visitVarStmt(stmt)
+    case let stmt as BlockStmt:
+      return try self.visitBlockStmt(stmt)
     default:
       fatalError("Unknown stmt \(stmt)")
     }
@@ -54,5 +58,13 @@ struct VarStmt: Stmt {
 
   func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
     return try visitor.visitVarStmt(self)
+  }
+}
+
+struct BlockStmt: Stmt {
+  let statements: [Stmt]
+
+  func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
+    return try visitor.visitBlockStmt(self)
   }
 }

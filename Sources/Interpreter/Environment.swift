@@ -2,21 +2,34 @@
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-struct Environment {
+class Environment {
+  private let parent: Environment?
   private var values = [String:Any?]()
 
-  mutating func define(_ name: String, _ value: Any?) {
+  init() {
+    self.parent = nil
+  }
+
+  init(parent: Environment) {
+    self.parent = parent
+  }
+
+  func define(_ name: String, _ value: Any?) {
     self.values[name] = value
   }
 
-  mutating func assign(_ name: String, _ value: Any?) throws {
-    let exists = self.values[name] != nil
-    if exists {
+  func assign(_ name: String, _ value: Any?) throws {
+    if self.values.contains(name) {
       values[name] = value
       return
     }
 
-    // todo: proper error handling
+    if let parent = self.parent {
+      try parent.assign(name, value)
+      return
+    }
+
+    //TODO: proper error handling
     throw RuntimeError.undefinedVariable(name: name)
   }
 
@@ -25,7 +38,11 @@ struct Environment {
       return value
     }
 
-    // todo: proper error handling
+    if let parent = self.parent {
+      return try parent.get(name)
+    }
+
+    //TODO: proper error handling
     throw RuntimeError.undefinedVariable(name: name)
   }
 }

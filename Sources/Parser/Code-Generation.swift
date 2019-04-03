@@ -158,6 +158,9 @@ func defineStmt() {
     Template(name: "Var", fields: [
       Field(name: "name", type: "String"),
       Field(name: "initializer", type: "Expr?")
+    ]),
+    Template(name: "Block", fields: [
+      Field(name: "statements", type: "[Stmt]")
     ])
   ]
 

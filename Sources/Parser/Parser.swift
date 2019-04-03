@@ -2,17 +2,21 @@
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
+// swiftlint:disable file_length
+
 enum ParseError: Error, CustomStringConvertible {
   case missingSemicolon
   case missingRightParen
+  case missingRightBrace
   case missingVariableName
   case expectedExpression
   case invalidAssignment
 
   var description: String {
     switch self {
-    case .missingSemicolon: return "Expected ';' after statement."
-    case .missingRightParen: return "Expected ')' after expression."
+    case .missingSemicolon: return "Expected ';'."
+    case .missingRightParen: return "Expected ')'."
+    case .missingRightBrace: return "Expected '}'."
     case .missingVariableName: return "Expected variable name."
     case .expectedExpression: return "Expected expression."
     case .invalidAssignment: return "Invalid assignment target."
@@ -76,6 +80,10 @@ class Parser {
       return try self.printStatement()
     }
 
+    if self.match(.leftBrace) {
+      return BlockStmt(statements: try self.blockStatement())
+    }
+
     return try self.expressionStatement()
   }
 
@@ -83,6 +91,19 @@ class Parser {
     let expr = try self.expression()
     try self.consumeOrThrow(type: .semicolon, error: .missingSemicolon)
     return PrintStmt(expr: expr)
+  }
+
+  private func blockStatement() throws -> [Stmt] {
+    var statements = [Stmt]()
+
+    while !self.check(.rightBrace), !self.isAtEnd {
+      if let declaration = self.declaration() {
+        statements.append(declaration)
+      }
+    }
+
+    try self.consumeOrThrow(type: .rightBrace, error: .missingRightBrace)
+    return statements
   }
 
   private func expressionStatement() throws -> Stmt {

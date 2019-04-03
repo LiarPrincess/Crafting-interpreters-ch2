@@ -17,6 +17,10 @@ class AstPrinter: StmtVisitor, ExprVisitor {
     return try parenthesize(name: "expr", exprs: stmt.expr)
   }
 
+  func visitBlockStmt(_ stmt: BlockStmt) throws -> String {
+    return try self.parenthesize(name: "block", stmts: stmt.statements)
+  }
+
   func visitVarStmt(_ stmt: VarStmt) throws -> String {
     switch stmt.initializer {
     case let .some(initializer):
@@ -61,12 +65,27 @@ class AstPrinter: StmtVisitor, ExprVisitor {
   func visitVariableExpr(_ expr: VariableExpr) throws -> String {
     return "@\(expr.name)"
   }
+
   func visitAssignExpr(_ expr: AssignExpr) throws -> String {
     return try self.parenthesize(name: "set @\(expr.name)", exprs: expr.value)
   }
 
+  // MARK: - Parenthesize
+
+  private func parenthesize(name: String, stmts: [Stmt]) throws -> String {
+    let childs = try stmts
+      .map { try $0.accept(self) }
+      .map { "  \($0)" }
+      .joined(separator: "\n")
+
+    return "(\(name)\n\(childs)\n)"
+  }
+
   private func parenthesize(name: String, exprs: Expr...) throws -> String {
-    let exprsString = try exprs.map { try $0.accept(self) }.joined(separator: " ")
-    return "(\(name) \(exprsString))"
+    let childs = try exprs
+      .map { try $0.accept(self) }
+      .joined(separator: " ")
+
+    return "(\(name) \(childs))"
   }
 }
