@@ -5,15 +5,24 @@
 protocol ExprVisitor {
   associatedtype ExprResult
 
-  @discardableResult func visitBoolExpr(_ expr: BoolExpr) throws -> ExprResult
-  @discardableResult func visitNumberExpr(_ expr: NumberExpr) throws -> ExprResult
-  @discardableResult func visitStringExpr(_ expr: StringExpr) throws -> ExprResult
-  @discardableResult func visitNilExpr(_ expr: NilExpr) throws -> ExprResult
-  @discardableResult func visitUnaryExpr(_ expr: UnaryExpr) throws -> ExprResult
-  @discardableResult func visitBinaryExpr(_ expr: BinaryExpr) throws -> ExprResult
-  @discardableResult func visitGroupingExpr(_ expr: GroupingExpr) throws -> ExprResult
-  @discardableResult func visitVariableExpr(_ expr: VariableExpr) throws -> ExprResult
-  @discardableResult func visitAssignExpr(_ expr: AssignExpr) throws -> ExprResult
+  @discardableResult
+  func visitBoolExpr(_ expr: BoolExpr) throws -> ExprResult
+  @discardableResult
+  func visitNumberExpr(_ expr: NumberExpr) throws -> ExprResult
+  @discardableResult
+  func visitStringExpr(_ expr: StringExpr) throws -> ExprResult
+  @discardableResult
+  func visitNilExpr(_ expr: NilExpr) throws -> ExprResult
+  @discardableResult
+  func visitUnaryExpr(_ expr: UnaryExpr) throws -> ExprResult
+  @discardableResult
+  func visitBinaryExpr(_ expr: BinaryExpr) throws -> ExprResult
+  @discardableResult
+  func visitGroupingExpr(_ expr: GroupingExpr) throws -> ExprResult
+  @discardableResult
+  func visitVariableExpr(_ expr: VariableExpr) throws -> ExprResult
+  @discardableResult
+  func visitAssignExpr(_ expr: AssignExpr) throws -> ExprResult
 }
 
 extension ExprVisitor {

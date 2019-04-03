@@ -123,7 +123,7 @@ class Parser {
       let right = try self.comparison()
       expr = BinaryExpr(op: op, left: expr, right: right)
     }
-    return expr;
+    return expr
   }
 
   private func comparison() throws -> Expr {
@@ -134,7 +134,7 @@ class Parser {
       let right = try self.addition()
       expr = BinaryExpr(op: op, left: expr, right: right)
     }
-    return expr;
+    return expr
   }
 
   private func addition() throws -> Expr{
@@ -145,7 +145,7 @@ class Parser {
       let right = try self.multiplication()
       expr = BinaryExpr(op: op, left: expr, right: right)
     }
-    return expr;
+    return expr
   }
 
   private func multiplication() throws -> Expr{
@@ -156,7 +156,7 @@ class Parser {
       let right = try self.unary()
       expr = BinaryExpr(op: op, left: expr, right: right)
     }
-    return expr;
+    return expr
   }
 
   private func unary() throws -> Expr {
@@ -277,7 +277,7 @@ class Parser {
         return
       }
 
-      switch (self.peek.type) {
+      switch self.peek.type {
       case .class, .fun, .var, .for, .if, .while, .print, .return: return
       default: self.advance()
       }

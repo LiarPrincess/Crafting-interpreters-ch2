@@ -46,18 +46,18 @@ class Interpreter: StmtVisitor, ExprVisitor {
 
   // MARK: - Statements
 
-  func visitPrintStmt(_ stmt: PrintStmt) throws -> Void {
+  func visitPrintStmt(_ stmt: PrintStmt) throws {
     let value = try self.evaluate(stmt.expr)
     let valueString = self.getDebugDescription(value)
     print(valueString)
   }
 
-  func visitExpressionStmt(_ stmt: ExpressionStmt) throws -> Void {
+  func visitExpressionStmt(_ stmt: ExpressionStmt) throws {
     _ = try self.evaluate(stmt.expr)
   }
 
-  func visitVarStmt(_ stmt: VarStmt) throws -> Void {
-    var value: Any? = nil
+  func visitVarStmt(_ stmt: VarStmt) throws {
+    var value: Any?
     if let initializer = stmt.initializer {
       value = try self.evaluate(initializer)
     }

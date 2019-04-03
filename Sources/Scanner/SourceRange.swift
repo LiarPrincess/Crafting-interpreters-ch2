@@ -22,8 +22,8 @@ struct SourceRange: CustomStringConvertible {
   var description: String {
     let equalLine = start.line == end.line
     let equalColumn = start.column == end.column
-    return equalLine && equalColumn ? self.start.description :
+    return equalLine && equalColumn ? "[\(self.start.line):\(self.start.column)]" :
            equalLine                ? "[\(self.start.line):\(self.start.column)-\(self.end.column)]" :
-           "\(self.start)-\(self.end)"
+           "[\(self.start.line):\(self.start.column)-\(self.end.line):\(self.end.column)]"
   }
 }

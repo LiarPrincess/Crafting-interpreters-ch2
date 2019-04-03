@@ -5,9 +5,12 @@
 protocol StmtVisitor {
   associatedtype StmtResult
 
-  @discardableResult func visitPrintStmt(_ stmt: PrintStmt) throws -> StmtResult
-  @discardableResult func visitExpressionStmt(_ stmt: ExpressionStmt) throws -> StmtResult
-  @discardableResult func visitVarStmt(_ stmt: VarStmt) throws -> StmtResult
+  @discardableResult
+  func visitPrintStmt(_ stmt: PrintStmt) throws -> StmtResult
+  @discardableResult
+  func visitExpressionStmt(_ stmt: ExpressionStmt) throws -> StmtResult
+  @discardableResult
+  func visitVarStmt(_ stmt: VarStmt) throws -> StmtResult
 }
 
 extension StmtVisitor {

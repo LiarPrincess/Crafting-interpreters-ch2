@@ -25,6 +25,7 @@ enum Operator: String, CustomStringConvertible {
     return self.rawValue
   }
 
+  // swiftlint:disable:next cyclomatic_complexity
   static func fromToken(_ tokenType: TokenType) -> Operator? {
     switch tokenType {
     case .plus:  return .plus

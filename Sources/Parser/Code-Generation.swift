@@ -30,7 +30,7 @@ private func getTypeName(_ protocolName: String, _ template: Template) -> String
 }
 
 private func getVisitorResultName(_ protocolName: String) -> String {
-  return "\(protocolName)Result" 
+  return "\(protocolName)Result"
 }
 
 private func defineVisitorProtocol(_ protocolName: String, _ templates: [Template]) {
@@ -44,7 +44,8 @@ private func defineVisitorProtocol(_ protocolName: String, _ templates: [Templat
 
   for template in templates {
     let type = getTypeName(protocolName, template)
-    print("  @discardableResult func visit\(type)(_ \(protocolNameLowercase): \(type)) throws -> \(visitorResult)")
+    print("  @discardableResult")
+    print("  func visit\(type)(_ \(protocolNameLowercase): \(type)) throws -> \(visitorResult)")
   }
   print("}")
   print("")
@@ -126,7 +127,7 @@ func defineExpr() {
     Template(name: "Binary", fields: [
       Field(name: "op",    type: "Operator"),
       Field(name: "left",  type: "Expr"),
-      Field(name: "right", type: "Expr"),
+      Field(name: "right", type: "Expr")
     ]),
     Template(name: "Grouping", fields: [
       Field(name: "expr", type: "Expr")

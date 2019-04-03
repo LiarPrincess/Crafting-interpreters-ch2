@@ -4,45 +4,26 @@
 
 import Foundation
 
-private struct Location {
-  var line:   Int
-  var column: Int
-
-  init(line: Int, column: Int) {
-    self.line = line
-    self.column = column
-  }
-
-  init(copy: Location) {
-    self.line = copy.line
-    self.column = copy.column
-  }
-
-  func toSourceLocation() -> SourceLocation {
-    return SourceLocation(line: self.line, column: self.column)
-  }
-}
-
 class Scanner {
 
   private let source: [UnicodeScalar]
 
   /// Location in the source
-  private var location: Location
+  private var location: SourceLocation
 
   /// Index of the current character
   private var sourceIndex = 0
 
   init(_ source: String) {
     self.source = Array(source.unicodeScalars)
-    self.location = Location(line: 1, column: 0)
+    self.location = SourceLocation(line: 1, column: 0)
   }
 
   func scanTokens() -> ScannerResult {
     var tokens = [Token]()
     var errors = [ScannerError]()
 
-    while (tokens.last?.type != .eof) {
+    while tokens.last?.type != .eof {
       do {
         if let token = try self.advanceToNextToken() {
           tokens.append(token)
@@ -69,11 +50,10 @@ class Scanner {
       return SourceLocation(line: currentLine, column: 0)
     }()
 
-    let end = self.location.toSourceLocation()
-    return SourceRange(start: start, end: end)
+    return SourceRange(start: start, end: self.location)
   }
 
-  // swiftlint:disable:next cyclomatic_complexity
+  // swiftlint:disable:next cyclomatic_complexity function_body_length
   private func advanceToNextToken() throws -> Token? {
     guard let char = self.advance() else {
       return self.createToken(type: .eof)
@@ -135,10 +115,12 @@ class Scanner {
     }
 
     if char == "\n" {
-      self.location.line += 1
-      self.location.column = 0
+      let line = self.location.line + 1
+      self.location = SourceLocation(line: line, column: 0)
     } else {
-      self.location.column += 1
+      let line = self.location.line
+      let column = self.location.column + 1
+      self.location = SourceLocation(line: line, column: column)
     }
 
     self.sourceIndex += 1
@@ -183,10 +165,8 @@ class Scanner {
     return self.createToken(type: type, start: self.location)
   }
 
-  private func createToken(type: TokenType, start: Location) -> Token {
-    let rangeStart = start.toSourceLocation()
-    let rangeEnd   = self.location.toSourceLocation()
-    let range = SourceRange(start: rangeStart, end: rangeEnd)
+  private func createToken(type: TokenType, start: SourceLocation) -> Token {
+    let range = SourceRange(start: start, end: self.location)
     printDebug(message: "Creating token: \(type)")
     return Token(type: type, range: range)
   }
@@ -211,7 +191,7 @@ class Scanner {
 
   private func string() throws -> Token {
     let startIndex = self.tokenStart
-    let startLocation = Location(line: self.location.line, column: self.location.column)
+    let startLocation = self.location
 
     // advance to the end of the string
     while let char = self.peek(), char != "\"" && char != "\n" {
@@ -234,7 +214,7 @@ class Scanner {
 
   private func number() -> Token {
     let startIndex = self.tokenStart
-    let startLocation = Location(line: self.location.line, column: self.location.column)
+    let startLocation = self.location
 
     while let char = self.peek(), self.isDigit(char) {
       self.advance()
@@ -260,7 +240,7 @@ class Scanner {
 
   private func identifier() -> Token {
     let startIndex = self.tokenStart
-    let startLocation = Location(copy: self.location)
+    let startLocation = self.location
 
     while let char = self.peek(), self.isAlphaNumeric(char) {
       self.advance()
@@ -273,23 +253,20 @@ class Scanner {
     return self.createToken(type: type, start: startLocation)
   }
 
-  private let keywords: [String:TokenType] = {
-    return ["and": .and,
-            "class": .class,
-            "else": .else,
-            "false": .false,
-            "for": .for,
-            "fun": .fun,
-            "if": .if,
-            "nil": .nil,
-            "or": .or,
-            "print": .print,
-            "return": .return,
-            "super": .super,
-            "this": .this,
-            "true": .true,
-            "var": .var,
-            "while": .while
-    ]
-  }()
+  private let keywords: [String:TokenType] = ["and": .and,
+                                              "class": .class,
+                                              "else": .else,
+                                              "false": .false,
+                                              "for": .for,
+                                              "fun": .fun,
+                                              "if": .if,
+                                              "nil": .nil,
+                                              "or": .or,
+                                              "print": .print,
+                                              "return": .return,
+                                              "super": .super,
+                                              "this": .this,
+                                              "true": .true,
+                                              "var": .var,
+                                              "while": .while]
 }
