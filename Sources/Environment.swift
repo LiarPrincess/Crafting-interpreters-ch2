@@ -17,8 +17,7 @@ struct Environment {
     }
 
     // todo: proper error handling
-    let token = Token(type: .identifier("name"), location: SourceLocation(line: 0, column: 0))
-    throw RuntimeError(token: token, type: .undefinedVariable(name))
+    throw RuntimeError.undefinedVariable(name: name)
   }
 
   func get(_ name: String) throws -> Any? {
@@ -27,7 +26,6 @@ struct Environment {
     }
 
     // todo: proper error handling
-    let token = Token(type: .identifier("name"), location: SourceLocation(line: 0, column: 0))
-    throw RuntimeError(token: token, type: .undefinedVariable(name))
+    throw RuntimeError.undefinedVariable(name: name)
   }
 }

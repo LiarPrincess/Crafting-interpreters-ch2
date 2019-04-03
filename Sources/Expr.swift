@@ -79,7 +79,7 @@ struct NilExpr: Expr {
 }
 
 struct UnaryExpr: Expr {
-  let op: Token
+  let op: Operator
   let right: Expr
 
   func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
@@ -88,7 +88,7 @@ struct UnaryExpr: Expr {
 }
 
 struct BinaryExpr: Expr {
-  let op: Token
+  let op: Operator
   let left: Expr
   let right: Expr
 

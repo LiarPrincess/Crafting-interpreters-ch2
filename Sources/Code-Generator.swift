@@ -120,11 +120,11 @@ func defineExpr() {
     Template(name: "Nil", fields: []),
 
     Template(name: "Unary", fields: [
-      Field(name: "op",    type: "Token"),
+      Field(name: "op",    type: "Operator"),
       Field(name: "right", type: "Expr")
     ]),
     Template(name: "Binary", fields: [
-      Field(name: "op",    type: "Token"),
+      Field(name: "op",    type: "Operator"),
       Field(name: "left",  type: "Expr"),
       Field(name: "right", type: "Expr"),
     ]),

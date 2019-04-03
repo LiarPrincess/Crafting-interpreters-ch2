@@ -9,4 +9,8 @@ struct SourceLocation: CustomStringConvertible {
   var description: String {
     return "[\(line),\(column)]"
   }
+
+  static var tmp: SourceLocation {
+    return SourceLocation(line: 0, column: 0)
+  }
 }

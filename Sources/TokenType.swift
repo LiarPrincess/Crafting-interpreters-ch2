@@ -16,8 +16,8 @@ enum TokenType {
   // One or two character tokens
   case bang, bangEqual
   case equal, equalEqual
-  case greater, greaterEqual
   case less, lessEqual
+  case greater, greaterEqual
 
   // Literals
   case identifier(String)

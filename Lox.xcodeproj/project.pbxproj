@@ -26,6 +26,7 @@
 		90CA2F12225375E70032A643 /* Interpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F11225375E70032A643 /* Interpreter.swift */; };
 		90CA2F142253B8420032A643 /* Stmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F132253B8420032A643 /* Stmt.swift */; };
 		90CA2F182253F2020032A643 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F172253F2020032A643 /* Environment.swift */; };
+		90CA2F1A225419A90032A643 /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F19225419A90032A643 /* Operator.swift */; };
 		OBJ_27 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_8 /* Expr.swift */; };
 		OBJ_28 /* Lox.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Lox.swift */; };
 		OBJ_29 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Parser.swift */; };
@@ -63,6 +64,7 @@
 		90CA2F11225375E70032A643 /* Interpreter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interpreter.swift; sourceTree = "<group>"; };
 		90CA2F132253B8420032A643 /* Stmt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stmt.swift; sourceTree = "<group>"; };
 		90CA2F172253F2020032A643 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
+		90CA2F19225419A90032A643 /* Operator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operator.swift; sourceTree = "<group>"; };
 		"Lox::Lox::Product" /* Lox */ = {isa = PBXFileReference; lastKnownFileType = text; path = Lox; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Lox::LoxTests::Product" /* LoxTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = LoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_10 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				OBJ_9 /* Lox.swift */,
 				OBJ_8 /* Expr.swift */,
 				90CA2F132253B8420032A643 /* Stmt.swift */,
+				90CA2F19225419A90032A643 /* Operator.swift */,
 				90CA2F172253F2020032A643 /* Environment.swift */,
 				OBJ_11 /* Scanner.swift */,
 				OBJ_10 /* Parser.swift */,
@@ -239,6 +242,7 @@
 				90CA2F12225375E70032A643 /* Interpreter.swift in Sources */,
 				OBJ_30 /* Scanner.swift in Sources */,
 				90CA2F182253F2020032A643 /* Environment.swift in Sources */,
+				90CA2F1A225419A90032A643 /* Operator.swift in Sources */,
 				OBJ_31 /* SourceLocation.swift in Sources */,
 				OBJ_32 /* Token.swift in Sources */,
 				OBJ_33 /* TokenType.swift in Sources */,

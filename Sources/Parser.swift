@@ -119,7 +119,7 @@ class Parser {
     var expr = try self.comparison()
 
     while self.match(.bangEqual, .equalEqual) {
-      let op = self.previous
+      let op = self.toOperator(self.previous.type)
       let right = try self.comparison()
       expr = BinaryExpr(op: op, left: expr, right: right)
     }
@@ -130,7 +130,7 @@ class Parser {
     var expr = try self.addition()
 
     while self.match(.greater, .greaterEqual, .less, .lessEqual) {
-      let op = self.previous
+      let op = self.toOperator(self.previous.type)
       let right = try self.addition()
       expr = BinaryExpr(op: op, left: expr, right: right)
     }
@@ -141,7 +141,7 @@ class Parser {
     var expr = try self.multiplication()
 
     while self.match(.minus, .plus) {
-      let op = self.previous
+      let op = self.toOperator(self.previous.type)
       let right = try self.multiplication()
       expr = BinaryExpr(op: op, left: expr, right: right)
     }
@@ -152,7 +152,7 @@ class Parser {
     var expr = try self.unary()
 
     while self.match(.slash, .star) {
-      let op = self.previous
+      let op = self.toOperator(self.previous.type)
       let right = try self.unary()
       expr = BinaryExpr(op: op, left: expr, right: right)
     }
@@ -161,7 +161,7 @@ class Parser {
 
   private func unary() throws -> Expr {
     if self.match(.bang, .minus) {
-      let op = self.previous
+      let op = self.toOperator(self.previous.type)
       let right = try self.unary()
       return UnaryExpr(op: op, right: right)
     }
@@ -257,6 +257,14 @@ class Parser {
     }
 
     return false
+  }
+
+  // MARK: - Operators
+
+  private func toOperator(_ tokenType: TokenType) -> Operator {
+    let op = Operator.fromToken(tokenType)
+    assert(op != nil, "Unable to map \(self.previous.type) to operator.")
+    return op!
   }
 
   // MARK: - Errors

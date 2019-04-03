@@ -2,21 +2,18 @@
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-enum RuntimeErrorType: CustomStringConvertible {
-  case undefinedVariable(String)
-  case invalidOperandType(String)
+enum RuntimeError: Error, CustomStringConvertible {
+  case undefinedVariable(name: String)
+  case invalidOperandType(type: String)
+  case invalidOperandTypes(left: String, right: String)
 
   var description: String {
     switch self {
     case let .undefinedVariable(name): return "Undefined variable: \(name)."
     case let .invalidOperandType(type): return "Invalid operand type: \(type)."
+    case let .invalidOperandTypes(left, right): return "Invalid operand types: \(left) and \(right)."
     }
   }
-}
-
-struct RuntimeError: Error {
-  let token: Token
-  let type:  RuntimeErrorType
 }
 
 class Interpreter: StmtVisitor, ExprVisitor {
@@ -33,9 +30,8 @@ class Interpreter: StmtVisitor, ExprVisitor {
       }
     }
     catch let error as RuntimeError {
-      let location = error.token.location
-      let message = String(describing: error.type)
-      Lox.runtimeError(location: location, message: message)
+      let location = SourceLocation.tmp
+      Lox.runtimeError(location: location, message: error.description)
     }
     catch {
       fatalError("Unknown error")
@@ -88,9 +84,9 @@ class Interpreter: StmtVisitor, ExprVisitor {
   func visitUnaryExpr(_ expr: UnaryExpr) throws -> Any? {
     let right = try self.evaluate(expr.right)
 
-    switch expr.op.type {
+    switch expr.op {
     case .minus:
-      let right = try self.checkNumberOperand(expr.op, right)
+      let right = try self.checkNumberOperand(right)
       return -right
     case .bang:
       return self.isTruthy(right)
@@ -108,38 +104,34 @@ class Interpreter: StmtVisitor, ExprVisitor {
   }
 
   func visitBinaryExpr(_ expr: BinaryExpr) throws -> Any? {
-    let token = expr.op
     let left = try self.evaluate(expr.left)
     let right = try self.evaluate(expr.right)
 
-    switch token.type {
+    switch expr.op {
     case .plus:
       if self.isNumberOperand(left) && self.isNumberOperand(right) {
-        return try self.performBinaryNumberOperation(token, left, right, +)
-      }
-      if self.isStringOperand(left) && self.isStringOperand(right) {
-        return try self.performBinaryStringOperation(token, left, right, +)
+        return try self.performBinaryNumberOperation(left, right, +)
       }
       if self.isStringOperand(left) || self.isStringOperand(right) {
         if left == nil || right == nil { return nil }
-        return try self.performBinaryStringOperation(token, String(describing: left!), String(describing: right!), +)
+        return try self.performBinaryStringOperation(String(describing: left!), String(describing: right!), +)
       }
 
       let leftDescription  = self.getDebugDescription(left)
       let rightDescription = self.getDebugDescription(right)
-      throw RuntimeError(token: token, type: .invalidOperandType("\(leftDescription) and \(rightDescription)"))
+      throw RuntimeError.invalidOperandTypes(left: leftDescription, right: rightDescription)
 
-    case .minus: return try self.performBinaryNumberOperation(token, left, right, -)
-    case .slash: return try self.performBinaryNumberOperation(token, left, right, /)
-    case .star:  return try self.performBinaryNumberOperation(token, left, right, *)
+    case .minus: return try self.performBinaryNumberOperation(left, right, -)
+    case .slash: return try self.performBinaryNumberOperation(left, right, /)
+    case .star:  return try self.performBinaryNumberOperation(left, right, *)
 
-    case .greater:      return try self.performBinaryNumberOperation(token, left, right, >)
-    case .greaterEqual: return try self.performBinaryNumberOperation(token, left, right, >=)
-    case .less:         return try self.performBinaryNumberOperation(token, left, right, <)
-    case .lessEqual:    return try self.performBinaryNumberOperation(token, left, right, <=)
+    case .greater:      return try self.performBinaryNumberOperation(left, right, >)
+    case .greaterEqual: return try self.performBinaryNumberOperation(left, right, >=)
+    case .less:         return try self.performBinaryNumberOperation(left, right, <)
+    case .lessEqual:    return try self.performBinaryNumberOperation(left, right, <=)
 
-    case .equalEqual: return try  self.isEqual(token, left, right)
-    case .bangEqual:  return try !self.isEqual(token, left, right)
+    case .equalEqual: return try  self.isEqual(left, right)
+    case .bangEqual:  return try !self.isEqual(left, right)
 
     default:
       return nil
@@ -167,38 +159,38 @@ class Interpreter: StmtVisitor, ExprVisitor {
 
   private typealias BinaryOperation<T> = (T, T) -> Any?
 
-  private func performBinaryBoolOperation(_ token: Token, _ left: Any?, _ right: Any?, _ op: BinaryOperation<Bool>) throws -> Any? {
-    let left = try self.checkBoolOperand(token, left)
-    let right = try self.checkBoolOperand(token, right)
+  private func performBinaryBoolOperation(_ left: Any?, _ right: Any?, _ op: BinaryOperation<Bool>) throws -> Any? {
+    let left = try self.checkBoolOperand(left)
+    let right = try self.checkBoolOperand(right)
     return op(left, right)
   }
 
-  private func performBinaryNumberOperation(_ token: Token, _ left: Any?, _ right: Any?, _ op: BinaryOperation<Double>) throws -> Any? {
-    let left = try self.checkNumberOperand(token, left)
-    let right = try self.checkNumberOperand(token, right)
+  private func performBinaryNumberOperation(_ left: Any?, _ right: Any?, _ op: BinaryOperation<Double>) throws -> Any? {
+    let left = try self.checkNumberOperand(left)
+    let right = try self.checkNumberOperand(right)
     return op(left, right)
   }
 
-  private func performBinaryStringOperation(_ token: Token, _ left: Any?, _ right: Any?, _ op: BinaryOperation<String>) throws -> Any? {
-    let left = try self.checkStringOperand(token, left)
-    let right = try self.checkStringOperand(token, right)
+  private func performBinaryStringOperation(_ left: Any?, _ right: Any?, _ op: BinaryOperation<String>) throws -> Any? {
+    let left = try self.checkStringOperand(left)
+    let right = try self.checkStringOperand(right)
     return op(left, right)
   }
 
-  private func isEqual(_ token: Token, _ left: Any?, _ right: Any?) throws -> Bool {
+  private func isEqual(_ left: Any?, _ right: Any?) throws -> Bool {
     if left == nil && right == nil { return true }
     if left == nil || right == nil { return false }
 
     if self.isBoolOperand(left) && self.isBoolOperand(right) {
-      return try self.performBinaryBoolOperation(token, left, right, ==) as! Bool
+      return try self.performBinaryBoolOperation(left, right, ==) as! Bool
     }
 
     if self.isNumberOperand(left) && self.isNumberOperand(right) {
-      return try self.performBinaryNumberOperation(token, left, right, ==) as! Bool
+      return try self.performBinaryNumberOperation(left, right, ==) as! Bool
     }
 
     if self.isStringOperand(left) && self.isStringOperand(right) {
-      return try self.performBinaryStringOperation(token, left, right, ==) as! Bool
+      return try self.performBinaryStringOperation(left, right, ==) as! Bool
     }
 
     return true
@@ -218,28 +210,28 @@ class Interpreter: StmtVisitor, ExprVisitor {
     return operand is String
   }
 
-  private func checkBoolOperand(_ token: Token, _ operand: Any?) throws -> Bool {
+  private func checkBoolOperand(_ operand: Any?) throws -> Bool {
     guard self.isBoolOperand(operand) else {
       let operandDescription = self.getDebugDescription(operand)
-      throw RuntimeError(token: token, type: .invalidOperandType(operandDescription))
+      throw RuntimeError.invalidOperandType(type: operandDescription)
     }
 
     return operand as! Bool
   }
 
-  private func checkNumberOperand(_ token: Token, _ operand: Any?) throws -> Double {
+  private func checkNumberOperand(_ operand: Any?) throws -> Double {
     guard self.isNumberOperand(operand) else {
       let operandDescription = self.getDebugDescription(operand)
-      throw RuntimeError(token: token, type: .invalidOperandType(operandDescription))
+      throw RuntimeError.invalidOperandType(type: operandDescription)
     }
 
     return operand as! Double
   }
 
-  private func checkStringOperand(_ token: Token, _ operand: Any?) throws -> String {
+  private func checkStringOperand(_ operand: Any?) throws -> String {
     guard self.isStringOperand(operand) else {
       let operandDescription = self.getDebugDescription(operand)
-      throw RuntimeError(token: token, type: .invalidOperandType(operandDescription))
+      throw RuntimeError.invalidOperandType(type: operandDescription)
     }
 
     return operand as! String
