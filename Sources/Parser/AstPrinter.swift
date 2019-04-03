@@ -44,6 +44,11 @@ class AstPrinter: StmtVisitor, ExprVisitor {
     return self.parenthesize(name: "if", childs: childs)
   }
 
+  func visitWhileStmt(_ stmt: WhileStmt) throws -> String {
+    let body = try self.visit(stmt.body)
+    return self.parenthesize(name: "while", childs: [body])
+  }
+
   // MARK: - Expressions
 
   func visitBoolExpr(_ expr: BoolExpr) throws -> String {

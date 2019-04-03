@@ -171,6 +171,10 @@ func defineStmt() {
       Field(name: "condition", type: "Expr"),
       Field(name: "thenBranch", type: "Stmt"),
       Field(name: "elseBranch", type: "Stmt?")
+    ]),
+    Template(name: "While", fields: [
+      Field(name: "condition", type: "Expr"),
+      Field(name: "body", type: "Stmt")
     ])
   ]
 

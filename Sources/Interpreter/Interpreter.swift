@@ -2,6 +2,7 @@
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
+// swiftlint:disable file_length
 // swiftlint:disable force_cast
 
 enum RuntimeError: Error, CustomStringConvertible {
@@ -88,6 +89,12 @@ class Interpreter: StmtVisitor, ExprVisitor {
     }
     else if let elseBranch = stmt.elseBranch {
       try self.execute(elseBranch)
+    }
+  }
+
+  func visitWhileStmt(_ stmt: WhileStmt) throws {
+    while let condition = try self.evaluate(stmt.condition), self.isTruthy(condition) {
+      try self.execute(stmt.body)
     }
   }
 

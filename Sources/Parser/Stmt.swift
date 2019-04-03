@@ -15,6 +15,8 @@ protocol StmtVisitor {
   func visitBlockStmt(_ stmt: BlockStmt) throws -> StmtResult
   @discardableResult
   func visitIfStmt(_ stmt: IfStmt) throws -> StmtResult
+  @discardableResult
+  func visitWhileStmt(_ stmt: WhileStmt) throws -> StmtResult
 }
 
 extension StmtVisitor {
@@ -30,6 +32,8 @@ extension StmtVisitor {
       return try self.visitBlockStmt(stmt)
     case let stmt as IfStmt:
       return try self.visitIfStmt(stmt)
+    case let stmt as WhileStmt:
+      return try self.visitWhileStmt(stmt)
     default:
       fatalError("Unknown stmt \(stmt)")
     }
@@ -80,5 +84,14 @@ struct IfStmt: Stmt {
 
   func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
     return try visitor.visitIfStmt(self)
+  }
+}
+
+struct WhileStmt: Stmt {
+  let condition: Expr
+  let body: Stmt
+
+  func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
+    return try visitor.visitWhileStmt(self)
   }
 }

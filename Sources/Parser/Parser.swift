@@ -82,6 +82,10 @@ class Parser {
       return try self.ifStatement()
     }
 
+    if self.match(.while) {
+      return try self.whileStatement()
+    }
+
     return try self.expressionStatement()
   }
 
@@ -117,6 +121,15 @@ class Parser {
     }
 
     return IfStmt(condition: condition, thenBranch: thenBranch, elseBranch: elseBranch)
+  }
+
+  private func whileStatement() throws -> Stmt {
+    try self.consumeOrThrow(type: .leftParen, error: .missingToken("'('"))
+    let condition = try self.expression()
+    try self.consumeOrThrow(type: .rightParen, error: .missingToken("')'"))
+
+    let body = try self.statement()
+    return WhileStmt(condition: condition, body: body)
   }
 
   private func expressionStatement() throws -> Stmt {
