@@ -6,12 +6,14 @@
 
 enum RuntimeError: Error, CustomStringConvertible {
   case undefinedVariable(name: String)
+  case uninitalizedVariable(name: String)
   case invalidOperandType(type: String)
   case invalidOperandTypes(left: String, right: String)
 
   var description: String {
     switch self {
     case let .undefinedVariable(name): return "Undefined variable: \(name)."
+    case let .uninitalizedVariable(name): return "Attempt to use uninitalized variable: \(name)."
     case let .invalidOperandType(type): return "Invalid operand type: \(type)."
     case let .invalidOperandTypes(left, right): return "Invalid operand types: \(left) and \(right)."
     }
@@ -70,12 +72,12 @@ class Interpreter: StmtVisitor, ExprVisitor {
   }
 
   func visitVarStmt(_ stmt: VarStmt) throws {
-    var value: Any?
     if let initializer = stmt.initializer {
-      value = try self.evaluate(initializer)
+      let value = try self.evaluate(initializer)
+      self.environment.define(stmt.name, .initialized(value))
+    } else {
+      self.environment.define(stmt.name, .uninitialized)
     }
-
-    self.environment.define(stmt.name, value)
   }
 
   // MARK: - Expressions
