@@ -129,6 +129,11 @@ func defineExpr() {
       Field(name: "left",  type: "Expr"),
       Field(name: "right", type: "Expr")
     ]),
+    Template(name: "Logical", fields: [
+      Field(name: "op",    type: "Operator"),
+      Field(name: "left",  type: "Expr"),
+      Field(name: "right", type: "Expr")
+    ]),
     Template(name: "Grouping", fields: [
       Field(name: "expr", type: "Expr")
     ]),

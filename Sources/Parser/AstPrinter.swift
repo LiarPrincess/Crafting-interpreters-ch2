@@ -63,12 +63,17 @@ class AstPrinter: StmtVisitor, ExprVisitor {
   }
 
   func visitUnaryExpr(_ expr: UnaryExpr) throws -> String {
-    let op = String(describing: expr.op)
+    let op = expr.op.description
     return try self.parenthesize(name: op, exprs: expr.right)
   }
 
   func visitBinaryExpr(_ expr: BinaryExpr) throws -> String {
-    let op = String(describing: expr.op)
+    let op = expr.op.description
+    return try self.parenthesize(name: op, exprs: expr.left, expr.right)
+  }
+
+  func visitLogicalExpr(_ expr: LogicalExpr) throws -> String {
+    let op = expr.op.description
     return try self.parenthesize(name: op, exprs: expr.left, expr.right)
   }
 

@@ -165,6 +165,22 @@ class Interpreter: StmtVisitor, ExprVisitor {
       return nil
     }
   }
+
+  func visitLogicalExpr(_ expr: LogicalExpr) throws -> Any? {
+    let left = try self.evaluate(expr.left)
+    let isLeftTruthy = self.isTruthy(left)
+
+    if expr.op == .and && !isLeftTruthy {
+      return left
+    }
+
+    if expr.op == .or && isLeftTruthy {
+      return left
+    }
+
+    return try self.evaluate(expr.right)
+  }
+
   func visitGroupingExpr(_ expr: GroupingExpr) throws -> Any? {
     return try self.evaluate(expr.expr)
   }

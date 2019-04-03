@@ -18,6 +18,8 @@ protocol ExprVisitor {
   @discardableResult
   func visitBinaryExpr(_ expr: BinaryExpr) throws -> ExprResult
   @discardableResult
+  func visitLogicalExpr(_ expr: LogicalExpr) throws -> ExprResult
+  @discardableResult
   func visitGroupingExpr(_ expr: GroupingExpr) throws -> ExprResult
   @discardableResult
   func visitVariableExpr(_ expr: VariableExpr) throws -> ExprResult
@@ -40,6 +42,8 @@ extension ExprVisitor {
       return try self.visitUnaryExpr(expr)
     case let expr as BinaryExpr:
       return try self.visitBinaryExpr(expr)
+    case let expr as LogicalExpr:
+      return try self.visitLogicalExpr(expr)
     case let expr as GroupingExpr:
       return try self.visitGroupingExpr(expr)
     case let expr as VariableExpr:
@@ -103,6 +107,16 @@ struct BinaryExpr: Expr {
 
   func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitBinaryExpr(self)
+  }
+}
+
+struct LogicalExpr: Expr {
+  let op: Operator
+  let left: Expr
+  let right: Expr
+
+  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+    return try visitor.visitLogicalExpr(self)
   }
 }
 

@@ -44,7 +44,6 @@ class Environment {
       case let .initialized(x): return x
       case .uninitialized: throw RuntimeError.uninitalizedVariable(name: name)
       }
-      return value
     }
 
     if let parent = self.parent {

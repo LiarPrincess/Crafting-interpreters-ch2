@@ -132,7 +132,7 @@ class Parser {
   }
 
   private func assignment() throws -> Expr {
-    let expr = try self.equality()
+    let expr = try self.or()
 
     if self.match(.equal) {
       let equals = self.previous
@@ -146,6 +146,26 @@ class Parser {
       self.error(token: equals, error: .invalidAssignment)
     }
 
+    return expr
+  }
+
+  private func or() throws -> Expr {
+    var expr = try self.and()
+
+    while self.match(.or) {
+      let right = try self.and()
+      expr = LogicalExpr(op: .or, left: expr, right: right)
+    }
+    return expr
+  }
+
+  private func and() throws -> Expr {
+    var expr = try self.equality()
+
+    while self.match(.and) {
+      let right = try self.equality()
+      expr = LogicalExpr(op: .and, left: expr, right: right)
+    }
     return expr
   }
 

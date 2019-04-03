@@ -1,4 +1,4 @@
-if (false) {
+if (true and false) {
 var a = "global a";
 var b = "global b";
 var c = "global c";
