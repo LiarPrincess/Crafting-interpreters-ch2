@@ -285,7 +285,7 @@ class Parser {
   }
 
   private func error(token: Token, error: ParseError) -> ParseError {
-    Lox.error(location: token.location, message: error.description)
+    Lox.error(location: SourceLocation.tmp, message: error.description)
     return error
   }
 }

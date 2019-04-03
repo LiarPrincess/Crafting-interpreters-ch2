@@ -2,11 +2,7 @@
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-struct Token: CustomStringConvertible {
-  let type: TokenType
-  let location: SourceLocation
-
-  var description: String {
-    return "\(self.location) \(self.type)"
-  }
+struct ScannerResult {
+  let tokens: [Token]
+  let errors: [ScannerError]
 }

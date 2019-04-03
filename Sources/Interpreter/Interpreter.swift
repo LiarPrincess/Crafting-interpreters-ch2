@@ -2,6 +2,8 @@
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
+// swiftlint:disable force_cast
+
 enum RuntimeError: Error, CustomStringConvertible {
   case undefinedVariable(name: String)
   case invalidOperandType(type: String)

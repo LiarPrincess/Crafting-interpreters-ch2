@@ -49,21 +49,25 @@ class Lox {
   private static func run(_ source: String) {
     print("Scanning -> Tokens")
     let scanner = Scanner(source)
-    let tokens = scanner.scanTokens()
+    let scanResult = scanner.scanTokens()
 
-    for token in tokens {
-      print(token)
+    scanResult.tokens.forEach { print($0) }
+    guard scanResult.errors.isEmpty else {
+      scanResult.errors.forEach { print($0) }
+      return
     }
+
     print("")
 
     print("Parsing -> AST")
-    let parser = Parser(tokens)
+    let parser = Parser(scanResult.tokens)
     guard let statements = parser.parse() else {
       return
     }
 
     let printer = AstPrinter()
     for statement in statements {
+      // swiftlint:disable:next force_try
       print(try! printer.visit(statement))
     }
     print("")

@@ -66,7 +66,7 @@ class AstPrinter: StmtVisitor, ExprVisitor {
   }
 
   private func parenthesize(name: String, exprs: Expr...) throws -> String {
-    let exprsString = try exprs.map { e in try e.accept(self) }.joined(separator: " ")
+    let exprsString = try exprs.map { try $0.accept(self) }.joined(separator: " ")
     return "(\(name) \(exprsString))"
   }
 }

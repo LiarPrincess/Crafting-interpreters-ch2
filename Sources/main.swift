@@ -7,6 +7,8 @@ import Foundation
 //defineExpr()
 //defineStmt()
 
+debug = false
+
 let args = CommandLine.arguments.dropFirst()
 try Lox.main(["/Users/michal/Documents/Xcode/Lox/main.lox"])
 //try Lox.main(Array(args))

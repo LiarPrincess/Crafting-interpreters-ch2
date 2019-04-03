@@ -21,17 +21,20 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		90CA2F0E225358CD0032A643 /* Code-Generator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F0D225358CD0032A643 /* Code-Generator.swift */; };
+		90CA2F0E225358CD0032A643 /* Code-Generation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F0D225358CD0032A643 /* Code-Generation.swift */; };
 		90CA2F102253686C0032A643 /* AstPrinter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F0F2253686C0032A643 /* AstPrinter.swift */; };
 		90CA2F12225375E70032A643 /* Interpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F11225375E70032A643 /* Interpreter.swift */; };
 		90CA2F142253B8420032A643 /* Stmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F132253B8420032A643 /* Stmt.swift */; };
 		90CA2F182253F2020032A643 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F172253F2020032A643 /* Environment.swift */; };
 		90CA2F1A225419A90032A643 /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F19225419A90032A643 /* Operator.swift */; };
+		90CA2F202254CD610032A643 /* debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F1F2254CD610032A643 /* debug.swift */; };
+		90CA2F222254DFB80032A643 /* ScannerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F212254DFB80032A643 /* ScannerError.swift */; };
+		90CA2F242254E02F0032A643 /* ScannerResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F232254E02F0032A643 /* ScannerResult.swift */; };
 		OBJ_27 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_8 /* Expr.swift */; };
 		OBJ_28 /* Lox.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Lox.swift */; };
 		OBJ_29 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Parser.swift */; };
 		OBJ_30 /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* Scanner.swift */; };
-		OBJ_31 /* SourceLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* SourceLocation.swift */; };
+		OBJ_31 /* SourceRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* SourceRange.swift */; };
 		OBJ_32 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* Token.swift */; };
 		OBJ_33 /* TokenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* TokenType.swift */; };
 		OBJ_34 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* main.swift */; };
@@ -59,17 +62,20 @@
 
 /* Begin PBXFileReference section */
 		90CA2F0B2252DD5B0032A643 /* main.lox */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.lox; sourceTree = "<group>"; };
-		90CA2F0D225358CD0032A643 /* Code-Generator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Code-Generator.swift"; sourceTree = "<group>"; };
+		90CA2F0D225358CD0032A643 /* Code-Generation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Code-Generation.swift"; sourceTree = "<group>"; };
 		90CA2F0F2253686C0032A643 /* AstPrinter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstPrinter.swift; sourceTree = "<group>"; };
 		90CA2F11225375E70032A643 /* Interpreter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interpreter.swift; sourceTree = "<group>"; };
 		90CA2F132253B8420032A643 /* Stmt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stmt.swift; sourceTree = "<group>"; };
 		90CA2F172253F2020032A643 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		90CA2F19225419A90032A643 /* Operator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operator.swift; sourceTree = "<group>"; };
+		90CA2F1F2254CD610032A643 /* debug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = debug.swift; sourceTree = "<group>"; };
+		90CA2F212254DFB80032A643 /* ScannerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerError.swift; sourceTree = "<group>"; };
+		90CA2F232254E02F0032A643 /* ScannerResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerResult.swift; sourceTree = "<group>"; };
 		"Lox::Lox::Product" /* Lox */ = {isa = PBXFileReference; lastKnownFileType = text; path = Lox; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Lox::LoxTests::Product" /* LoxTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = LoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_10 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		OBJ_11 /* Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
-		OBJ_12 /* SourceLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceLocation.swift; sourceTree = "<group>"; };
+		OBJ_12 /* SourceRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceRange.swift; sourceTree = "<group>"; };
 		OBJ_13 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		OBJ_14 /* TokenType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenType.swift; sourceTree = "<group>"; };
 		OBJ_15 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -98,6 +104,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		90CA2F1B2254B0FC0032A643 /* Scanner */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_13 /* Token.swift */,
+				OBJ_14 /* TokenType.swift */,
+				OBJ_12 /* SourceRange.swift */,
+				OBJ_11 /* Scanner.swift */,
+				90CA2F212254DFB80032A643 /* ScannerError.swift */,
+				90CA2F232254E02F0032A643 /* ScannerResult.swift */,
+			);
+			path = Scanner;
+			sourceTree = "<group>";
+		};
+		90CA2F1C2254B10E0032A643 /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_8 /* Expr.swift */,
+				90CA2F132253B8420032A643 /* Stmt.swift */,
+				90CA2F19225419A90032A643 /* Operator.swift */,
+				OBJ_10 /* Parser.swift */,
+				90CA2F0F2253686C0032A643 /* AstPrinter.swift */,
+				90CA2F0D225358CD0032A643 /* Code-Generation.swift */,
+			);
+			path = Parser;
+			sourceTree = "<group>";
+		};
+		90CA2F1D2254B1320032A643 /* Interpreter */ = {
+			isa = PBXGroup;
+			children = (
+				90CA2F172253F2020032A643 /* Environment.swift */,
+				90CA2F11225375E70032A643 /* Interpreter.swift */,
+			);
+			path = Interpreter;
+			sourceTree = "<group>";
+		};
 		OBJ_16 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -130,20 +171,12 @@
 		OBJ_7 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				90CA2F1B2254B0FC0032A643 /* Scanner */,
+				90CA2F1C2254B10E0032A643 /* Parser */,
+				90CA2F1D2254B1320032A643 /* Interpreter */,
 				OBJ_9 /* Lox.swift */,
-				OBJ_8 /* Expr.swift */,
-				90CA2F132253B8420032A643 /* Stmt.swift */,
-				90CA2F19225419A90032A643 /* Operator.swift */,
-				90CA2F172253F2020032A643 /* Environment.swift */,
-				OBJ_11 /* Scanner.swift */,
-				OBJ_10 /* Parser.swift */,
-				90CA2F11225375E70032A643 /* Interpreter.swift */,
-				OBJ_12 /* SourceLocation.swift */,
-				OBJ_13 /* Token.swift */,
-				OBJ_14 /* TokenType.swift */,
-				90CA2F0F2253686C0032A643 /* AstPrinter.swift */,
-				90CA2F0D225358CD0032A643 /* Code-Generator.swift */,
 				OBJ_15 /* main.swift */,
+				90CA2F1F2254CD610032A643 /* debug.swift */,
 			);
 			path = Sources;
 			sourceTree = SOURCE_ROOT;
@@ -157,6 +190,7 @@
 			buildPhases = (
 				OBJ_26 /* Sources */,
 				OBJ_35 /* Frameworks */,
+				90CA2F1E2254B3030032A643 /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -228,14 +262,37 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		90CA2F1E2254B3030032A643 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		OBJ_26 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				90CA2F0E225358CD0032A643 /* Code-Generator.swift in Sources */,
+				90CA2F0E225358CD0032A643 /* Code-Generation.swift in Sources */,
+				90CA2F222254DFB80032A643 /* ScannerError.swift in Sources */,
 				90CA2F102253686C0032A643 /* AstPrinter.swift in Sources */,
 				OBJ_27 /* Expr.swift in Sources */,
+				90CA2F242254E02F0032A643 /* ScannerResult.swift in Sources */,
 				OBJ_28 /* Lox.swift in Sources */,
 				OBJ_29 /* Parser.swift in Sources */,
 				90CA2F142253B8420032A643 /* Stmt.swift in Sources */,
@@ -243,7 +300,8 @@
 				OBJ_30 /* Scanner.swift in Sources */,
 				90CA2F182253F2020032A643 /* Environment.swift in Sources */,
 				90CA2F1A225419A90032A643 /* Operator.swift in Sources */,
-				OBJ_31 /* SourceLocation.swift in Sources */,
+				90CA2F202254CD610032A643 /* debug.swift in Sources */,
+				OBJ_31 /* SourceRange.swift in Sources */,
 				OBJ_32 /* Token.swift in Sources */,
 				OBJ_33 /* TokenType.swift in Sources */,
 				OBJ_34 /* main.swift in Sources */,
