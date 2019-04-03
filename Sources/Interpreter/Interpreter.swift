@@ -80,6 +80,17 @@ class Interpreter: StmtVisitor, ExprVisitor {
     }
   }
 
+  func visitIfStmt(_ stmt: IfStmt) throws {
+    let condition = try self.evaluate(stmt.condition)
+
+    if self.isTruthy(condition) {
+      try self.execute(stmt.thenBranch)
+    }
+    else if let elseBranch = stmt.elseBranch {
+      try self.execute(elseBranch)
+    }
+  }
+
   // MARK: - Expressions
 
   func visitBoolExpr(_ expr: BoolExpr) throws -> Any? {

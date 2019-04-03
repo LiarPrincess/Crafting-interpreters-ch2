@@ -18,7 +18,8 @@ class AstPrinter: StmtVisitor, ExprVisitor {
   }
 
   func visitBlockStmt(_ stmt: BlockStmt) throws -> String {
-    return try self.parenthesize(name: "block", stmts: stmt.statements)
+    let childs = try stmt.statements.map { try $0.accept(self) }
+    return self.parenthesize(name: "block", childs: childs)
   }
 
   func visitVarStmt(_ stmt: VarStmt) throws -> String {
@@ -28,6 +29,19 @@ class AstPrinter: StmtVisitor, ExprVisitor {
     case .none:
       return try parenthesize(name: "decl @\(stmt.name)")
     }
+  }
+
+  func visitIfStmt(_ stmt: IfStmt) throws -> String {
+    var childs: [String] = [
+      "(\(try self.visit(stmt.condition)))",
+      "(\(try self.visit(stmt.thenBranch)))"
+    ]
+
+    if let elseBranch = stmt.elseBranch {
+      childs.append("(\(try self.visit(elseBranch)))")
+    }
+
+    return self.parenthesize(name: "if", childs: childs)
   }
 
   // MARK: - Expressions
@@ -72,20 +86,12 @@ class AstPrinter: StmtVisitor, ExprVisitor {
 
   // MARK: - Parenthesize
 
-  private func parenthesize(name: String, stmts: [Stmt]) throws -> String {
-    let childs = try stmts
-      .map { try $0.accept(self) }
-      .map { "  \($0)" }
-      .joined(separator: "\n")
-
-    return "(\(name)\n\(childs)\n)"
+  private func parenthesize(name: String, exprs: Expr...) throws -> String {
+    let childs = try exprs.map { try $0.accept(self) }
+    return self.parenthesize(name: name, childs: childs)
   }
 
-  private func parenthesize(name: String, exprs: Expr...) throws -> String {
-    let childs = try exprs
-      .map { try $0.accept(self) }
-      .joined(separator: " ")
-
-    return "(\(name) \(childs))"
+  private func parenthesize(name: String, childs: [String]) -> String {
+    return "(\(name) \(childs.joined(separator: " ")))"
   }
 }

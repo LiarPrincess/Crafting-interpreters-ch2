@@ -1,23 +1,29 @@
+if (false) {
 var a = "global a";
 var b = "global b";
 var c = "global c";
 {
-  var a = "outer a";
-  var b = "outer b";
-  {
-    var a = "inner a";
-    print a;
-    print b;
-    print c;
-  }
-  print a;
-  print b;
-  print c;
+var a = "outer a";
+var b = "outer b";
+{
+var a = "inner a";
+print a;
+print b;
+print c;
+}
+print a;
+print b;
+print c;
 }
 print a;
 print b;
 print c;
 
+
+}
+else {
+print "false";
+}
 //print "one";
 //print true; // comment
 //print 2 + 1;
@@ -27,3 +33,10 @@ var a = 1;
 var b = 2;
 b = 4;
 print a + b;
+
+var a = 1;
+{
+  var a = a + 2;
+  print a;
+}
+

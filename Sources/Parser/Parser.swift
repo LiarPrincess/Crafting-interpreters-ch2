@@ -5,19 +5,13 @@
 // swiftlint:disable file_length
 
 enum ParseError: Error, CustomStringConvertible {
-  case missingSemicolon
-  case missingRightParen
-  case missingRightBrace
-  case missingVariableName
+  case missingToken(String)
   case expectedExpression
   case invalidAssignment
 
   var description: String {
     switch self {
-    case .missingSemicolon: return "Expected ';'."
-    case .missingRightParen: return "Expected ')'."
-    case .missingRightBrace: return "Expected '}'."
-    case .missingVariableName: return "Expected variable name."
+    case let .missingToken(token): return "Expected \(token)."
     case .expectedExpression: return "Expected expression."
     case .invalidAssignment: return "Invalid assignment target."
     }
@@ -62,7 +56,7 @@ class Parser {
     let current = self.peek
 
     guard case let TokenType.identifier(name) = current.type else {
-      throw ParseError.missingVariableName
+      throw ParseError.missingToken("variable name")
     }
     self.advance()
 
@@ -71,7 +65,7 @@ class Parser {
       expr = try self.expression()
     }
 
-    try self.consumeOrThrow(type: .semicolon, error: .missingSemicolon)
+    try self.consumeOrThrow(type: .semicolon, error: .missingToken("';'"))
     return VarStmt(name: name, initializer: expr)
   }
 
@@ -84,12 +78,16 @@ class Parser {
       return BlockStmt(statements: try self.blockStatement())
     }
 
+    if self.match(.if) {
+      return try self.ifStatement()
+    }
+
     return try self.expressionStatement()
   }
 
   private func printStatement() throws -> Stmt {
     let expr = try self.expression()
-    try self.consumeOrThrow(type: .semicolon, error: .missingSemicolon)
+    try self.consumeOrThrow(type: .semicolon, error: .missingToken(";"))
     return PrintStmt(expr: expr)
   }
 
@@ -102,13 +100,28 @@ class Parser {
       }
     }
 
-    try self.consumeOrThrow(type: .rightBrace, error: .missingRightBrace)
+    try self.consumeOrThrow(type: .rightBrace, error: .missingToken("'}'"))
     return statements
+  }
+
+  private func ifStatement() throws -> Stmt {
+    try self.consumeOrThrow(type: .leftParen, error: .missingToken("'('"))
+    let condition = try self.expression()
+    try self.consumeOrThrow(type: .rightParen, error: .missingToken("')'"))
+
+    let thenBranch = try self.statement()
+
+    var elseBranch: Stmt?
+    if self.match(.else) {
+      elseBranch = try self.statement()
+    }
+
+    return IfStmt(condition: condition, thenBranch: thenBranch, elseBranch: elseBranch)
   }
 
   private func expressionStatement() throws -> Stmt {
     let expr = try self.expression()
-    try self.consumeOrThrow(type: .semicolon, error: .missingSemicolon)
+    try self.consumeOrThrow(type: .semicolon, error: .missingToken("';'"))
     return ExpressionStmt(expr: expr)
   }
 
@@ -213,7 +226,7 @@ class Parser {
 
     if self.match(.leftParen) {
       let expr = try self.expression()
-      try self.consumeOrThrow(type: .rightParen, error: .missingRightParen)
+      try self.consumeOrThrow(type: .rightParen, error: .missingToken("')'"))
       return GroupingExpr(expr: expr)
     }
 

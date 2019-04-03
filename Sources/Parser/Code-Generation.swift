@@ -161,6 +161,11 @@ func defineStmt() {
     ]),
     Template(name: "Block", fields: [
       Field(name: "statements", type: "[Stmt]")
+    ]),
+    Template(name: "If", fields: [
+      Field(name: "condition", type: "Expr"),
+      Field(name: "thenBranch", type: "Stmt"),
+      Field(name: "elseBranch", type: "Stmt?")
     ])
   ]
 
