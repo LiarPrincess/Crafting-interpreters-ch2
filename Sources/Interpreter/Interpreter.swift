@@ -49,11 +49,8 @@ class Interpreter: InterpreterType {
   }
 
   func isTruthy(_ value: Any?) -> Bool {
-    switch value {
-    case .none: return false
-    case let .some(bool) where bool is Bool: return bool as! Bool
-    default: return true
-    }
+    guard let value = value else { return false }
+    return (value as? Bool) ?? true
   }
 
   // MARK: - Errors

@@ -25,7 +25,7 @@ extension Interpreter: ExprVisitor {
 
     switch expr.op {
     case .minus:
-      let right = try self.checkNumberOperand(right, "-")
+      let right = try self.numberOrThrow(right, "-")
       return -right
     case .bang:
       return self.isTruthy(right)
@@ -41,24 +41,24 @@ extension Interpreter: ExprVisitor {
 
     switch expr.op {
     case .plus:
-      if self.isNumberOperand(left) && self.isNumberOperand(right) {
-        return try self.performBinaryNumberOperation(left, right, "+", +)
+      if self.isNumber(left) && self.isNumber(right) {
+        return try self.performNumberOperation(left, right, "+", +)
       }
-      if self.isStringOperand(left) || self.isStringOperand(right) {
+      if self.isString(left) || self.isString(right) {
         if left == nil || right == nil { return nil }
-        return try self.performBinaryStringOperation(String(describing: left!), String(describing: right!), "+", +)
+        return try self.performStringOperation(String(describing: left!), String(describing: right!), "+", +)
       }
 
       throw RuntimeError.invalidOperandTypes(op: "+", leftType: self.getType(left), rightType: self.getType(right))
 
-    case .minus: return try self.performBinaryNumberOperation(left, right, "-", -)
-    case .slash: return try self.performBinaryNumberOperation(left, right, "/", /)
-    case .star:  return try self.performBinaryNumberOperation(left, right, "*", *)
+    case .minus: return try self.performNumberOperation(left, right, "-", -)
+    case .slash: return try self.performNumberOperation(left, right, "/", /)
+    case .star:  return try self.performNumberOperation(left, right, "*", *)
 
-    case .greater:      return try self.performBinaryNumberOperation(left, right, ">", >)
-    case .greaterEqual: return try self.performBinaryNumberOperation(left, right, ">=", >=)
-    case .less:         return try self.performBinaryNumberOperation(left, right, "<", <)
-    case .lessEqual:    return try self.performBinaryNumberOperation(left, right, "<=", <=)
+    case .greater:      return try self.performNumberOperation(left, right, ">", >)
+    case .greaterEqual: return try self.performNumberOperation(left, right, ">=", >=)
+    case .less:         return try self.performNumberOperation(left, right, "<", <)
+    case .lessEqual:    return try self.performNumberOperation(left, right, "<=", <=)
 
     case .equalEqual: return try  self.isEqual(left, right)
     case .bangEqual:  return try !self.isEqual(left, right)
@@ -104,78 +104,78 @@ extension Interpreter: ExprVisitor {
 
 extension Interpreter {
 
-  fileprivate func isBoolOperand(_ operand: Any?) -> Bool {
+  private func isEqual(_ left: Any?, _ right: Any?) throws -> Bool {
+    if left == nil && right == nil { return true }
+    if left == nil || right == nil { return false }
+
+    if let left = left as? Bool, let right = right as? Bool {
+      return left == right
+    }
+
+    if let left = left as? Double, let right = right as? Double {
+      return left == right
+    }
+
+    if let left = left as? String, let right = right as? String {
+      return left == right
+    }
+
+    return true
+  }
+
+  private func isBool(_ operand: Any?) -> Bool {
     return operand is Bool
   }
 
-  fileprivate func isNumberOperand(_ operand: Any?) -> Bool {
+  private func isNumber(_ operand: Any?) -> Bool {
     return operand is Double
   }
 
-  fileprivate func isStringOperand(_ operand: Any?) -> Bool {
+  private func isString(_ operand: Any?) -> Bool {
     return operand is String
   }
 
-  fileprivate func checkBoolOperand(_ operand: Any?, _ op: String) throws -> Bool {
-    guard self.isBoolOperand(operand) else {
+  private func boolOrThrow(_ operand: Any?, _ op: String) throws -> Bool {
+    guard self.isBool(operand) else {
       throw RuntimeError.invalidOperandType(op: op, type: self.getType(operand))
     }
 
     return operand as! Bool
   }
 
-  fileprivate func checkNumberOperand(_ operand: Any?, _ op: String) throws -> Double {
-    guard self.isNumberOperand(operand) else {
+  private func numberOrThrow(_ operand: Any?, _ op: String) throws -> Double {
+    guard self.isNumber(operand) else {
       throw RuntimeError.invalidOperandType(op: op, type: self.getType(operand))
     }
 
     return operand as! Double
   }
 
-  fileprivate func checkStringOperand(_ operand: Any?, _ op: String) throws -> String {
-    guard self.isStringOperand(operand) else {
+  private func stringOrThrow(_ operand: Any?, _ op: String) throws -> String {
+    guard self.isString(operand) else {
       throw RuntimeError.invalidOperandType(op: op, type: self.getType(operand))
     }
 
     return operand as! String
   }
 
-  fileprivate func isEqual(_ left: Any?, _ right: Any?) throws -> Bool {
-    if left == nil && right == nil { return true }
-    if left == nil || right == nil { return false }
+  private typealias BinaryOperation<T> = (T, T) -> Any?
 
-    if self.isBoolOperand(left) && self.isBoolOperand(right) {
-      return try self.performBinaryBoolOperation(left, right, "==", ==) as! Bool
-    }
-
-    if self.isNumberOperand(left) && self.isNumberOperand(right) {
-      return try self.performBinaryNumberOperation(left, right, "==", ==) as! Bool
-    }
-
-    if self.isStringOperand(left) && self.isStringOperand(right) {
-      return try self.performBinaryStringOperation(left, right, "==", ==) as! Bool
-    }
-
-    return true
-  }
-
-  fileprivate typealias BinaryOperation<T> = (T, T) -> Any?
-
-  fileprivate func performBinaryBoolOperation(_ left: Any?, _ right: Any?, _ op: String, _ f: BinaryOperation<Bool>) throws -> Any? {
-    let left = try self.checkBoolOperand(left, op)
-    let right = try self.checkBoolOperand(right, op)
+  private func performBoolOperation(_ left: Any?, _ right: Any?, _ op: String, _ f: BinaryOperation<Bool>) throws -> Any? {
+    let left = try self.boolOrThrow(left, op)
+    let right = try self.boolOrThrow(right, op)
     return f(left, right)
   }
 
-  fileprivate func performBinaryNumberOperation(_ left: Any?, _ right: Any?, _ op: String, _ f: BinaryOperation<Double>) throws -> Any? {
-    let left = try self.checkNumberOperand(left, op)
-    let right = try self.checkNumberOperand(right, op)
+  private func performNumberOperation(_ left: Any?, _ right: Any?, _ op: String, _ f: BinaryOperation<Double>) throws -> Any? {
+    let left = try self.numberOrThrow(left, op)
+    let right = try self.numberOrThrow(right, op)
     return f(left, right)
   }
 
-  fileprivate func performBinaryStringOperation(_ left: Any?, _ right: Any?, _ op: String, _ f: BinaryOperation<String>) throws -> Any? {
-    let left = try self.checkStringOperand(left, op)
-    let right = try self.checkStringOperand(right, op)
+  private func performStringOperation(_ left: Any?, _ right: Any?, _ op: String, _ f: BinaryOperation<String>) throws -> Any? {
+    let left = try self.stringOrThrow(left, op)
+    let right = try self.stringOrThrow(right, op)
     return f(left, right)
   }
 }
