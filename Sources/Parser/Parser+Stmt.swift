@@ -25,6 +25,10 @@ extension Parser {
       return try self.forStatement()
     }
 
+    if self.match(.return) {
+      return try self.returnStatement()
+    }
+
     return try self.expressionStatement()
   }
 
@@ -125,5 +129,11 @@ extension Parser {
     let expr = try self.expression()
     try self.consumeOrThrow(type: .semicolon, error: .missingToken("';'"))
     return ExpressionStmt(expr: expr)
+  }
+
+  func returnStatement() throws -> Stmt {
+    let result = self.check(.semicolon) ? nil : try self.expression()
+    try self.consumeOrThrow(type: .semicolon, error: .missingToken("';'"))
+    return ReturnStmt(value: result)
   }
 }

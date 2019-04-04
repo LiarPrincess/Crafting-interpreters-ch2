@@ -61,4 +61,9 @@ extension Interpreter: StmtVisitor {
     let function = Function(declaration: stmt)
     self.environment.define(stmt.name, .initialized(function))
   }
+
+  func visitReturnStmt(_ stmt: ReturnStmt) throws {
+    let result = stmt.value == nil ? nil : try self.evaluate(stmt.value!)
+    throw Return(value: result)
+  }
 }

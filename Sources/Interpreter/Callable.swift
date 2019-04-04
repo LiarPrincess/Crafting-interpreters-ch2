@@ -4,6 +4,10 @@
 
 import Foundation
 
+struct Return: Error {
+  let value: Any?
+}
+
 protocol Callable {
   var arity: Int { get }
   func call(_ interpreter: Interpreter, _ arguments: [Any?]) throws -> Any?
@@ -23,7 +27,13 @@ struct Function: Callable {
       environment.define(name, .initialized(arguments[index]))
     }
 
-    try interpreter.execute(self.declaration.body, in: environment)
+    do {
+      try interpreter.execute(self.declaration.body, in: environment)
+    }
+    catch let error as Return {
+      return error.value
+    }
+
     return nil
   }
 }

@@ -146,6 +146,7 @@ func defineExpr() {
       Field(name: "name",  type: "String"),
       Field(name: "value", type: "Expr")
     ]),
+
     Template(name: "Call", fields: [
       Field(name: "calee",     type: "Expr"),
       Field(name: "arguments", type: "[Expr]")
@@ -185,6 +186,9 @@ func defineStmt() {
       Field(name: "name",       type: "String"),
       Field(name: "parameters", type: "[String]"),
       Field(name: "body",       type: "Stmt")
+    ]),
+    Template(name: "Return", fields: [
+      Field(name: "value", type: "Expr?")
     ])
   ]
 

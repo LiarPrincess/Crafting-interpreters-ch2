@@ -55,6 +55,11 @@ class AstPrinter: StmtVisitor, ExprVisitor {
     return self.parenthesize(name: "fun", childs: [name, body])
   }
 
+  func visitReturnStmt(_ stmt: ReturnStmt) throws -> String {
+    let exprs = stmt.value == nil ? [] : [stmt.value!]
+    return try self.parenthesize(name: "return", exprs: exprs)
+  }
+
   // MARK: - Expressions
 
   func visitBoolExpr(_ expr: BoolExpr) throws -> String {
