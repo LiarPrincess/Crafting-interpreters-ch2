@@ -6,12 +6,14 @@ enum ParseError: Error, CustomStringConvertible {
   case missingToken(String)
   case expectedExpression
   case invalidAssignment
+  case tooManyArguments
 
   var description: String {
     switch self {
     case let .missingToken(token): return "Expected \(token)."
     case .expectedExpression: return "Expected expression."
     case .invalidAssignment: return "Invalid assignment target."
+    case .tooManyArguments: return "Function call has too many arguments."
     }
   }
 }

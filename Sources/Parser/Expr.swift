@@ -25,6 +25,8 @@ protocol ExprVisitor {
   func visitVariableExpr(_ expr: VariableExpr) throws -> ExprResult
   @discardableResult
   func visitAssignExpr(_ expr: AssignExpr) throws -> ExprResult
+  @discardableResult
+  func visitCallExpr(_ expr: CallExpr) throws -> ExprResult
 }
 
 extension ExprVisitor {
@@ -50,6 +52,8 @@ extension ExprVisitor {
       return try self.visitVariableExpr(expr)
     case let expr as AssignExpr:
       return try self.visitAssignExpr(expr)
+    case let expr as CallExpr:
+      return try self.visitCallExpr(expr)
     default:
       fatalError("Unknown expr \(expr)")
     }
@@ -142,5 +146,14 @@ struct AssignExpr: Expr {
 
   func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitAssignExpr(self)
+  }
+}
+
+struct CallExpr: Expr {
+  let calee: Expr
+  let arguments: [Expr]
+
+  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+    return try visitor.visitCallExpr(self)
   }
 }

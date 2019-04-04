@@ -25,27 +25,28 @@ class AstPrinter: StmtVisitor, ExprVisitor {
   func visitVarStmt(_ stmt: VarStmt) throws -> String {
     switch stmt.initializer {
     case let .some(initializer):
-      return try parenthesize(name: "decl @\(stmt.name)", exprs: initializer)
+      return try parenthesize(name: "var @\(stmt.name)", exprs: initializer)
     case .none:
-      return try parenthesize(name: "decl @\(stmt.name)")
+      return try parenthesize(name: "var @\(stmt.name)")
     }
   }
 
   func visitIfStmt(_ stmt: IfStmt) throws -> String {
     var childs: [String] = [
-      "(\(try self.visit(stmt.condition)))",
-      "(\(try self.visit(stmt.thenBranch)))"
+      self.parenthesize(name: "condition", childs: [try self.visit(stmt.condition)]),
+      self.parenthesize(name: "then",      childs: [try self.visit(stmt.thenBranch)])
     ]
 
     if let elseBranch = stmt.elseBranch {
-      childs.append("(\(try self.visit(elseBranch)))")
+      let elseString = self.parenthesize(name: "else", childs: [try self.visit(elseBranch)])
+      childs.append(elseString)
     }
 
     return self.parenthesize(name: "if", childs: childs)
   }
 
   func visitWhileStmt(_ stmt: WhileStmt) throws -> String {
-    let body = try self.visit(stmt.body)
+    let body = self.parenthesize(name: "body", childs: [try self.visit(stmt.body)])
     return self.parenthesize(name: "while", childs: [body])
   }
 
@@ -60,7 +61,7 @@ class AstPrinter: StmtVisitor, ExprVisitor {
   }
 
   func visitStringExpr(_ expr: StringExpr) throws -> String {
-    return expr.value
+    return "\"\(expr.value)\""
   }
 
   func visitNilExpr(_ expr: NilExpr) throws -> String {
@@ -94,14 +95,25 @@ class AstPrinter: StmtVisitor, ExprVisitor {
     return try self.parenthesize(name: "set @\(expr.name)", exprs: expr.value)
   }
 
+  func visitCallExpr(_ expr: CallExpr) throws -> String {
+    let calee = self.parenthesize(name: "name", childs: [try self.visit(expr.calee)])
+    let args = try self.parenthesize(name: "args", exprs: expr.arguments)
+    return self.parenthesize(name: "call", childs: [calee, args])
+  }
+
   // MARK: - Parenthesize
+
+  private func parenthesize(name: String, childs: [String]) -> String {
+    return "(\(name) \(childs.joined(separator: " ")))"
+  }
 
   private func parenthesize(name: String, exprs: Expr...) throws -> String {
     let childs = try exprs.map { try $0.accept(self) }
     return self.parenthesize(name: name, childs: childs)
   }
 
-  private func parenthesize(name: String, childs: [String]) -> String {
-    return "(\(name) \(childs.joined(separator: " ")))"
+  private func parenthesize(name: String, exprs: [Expr]) throws -> String {
+    let childs = try exprs.map { try $0.accept(self) }
+    return self.parenthesize(name: name, childs: childs)
   }
 }

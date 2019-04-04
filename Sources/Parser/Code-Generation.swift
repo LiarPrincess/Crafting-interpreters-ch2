@@ -105,6 +105,7 @@ private func define(_ protocolName: String, _ templates: [Template]) {
   defineTypes(protocolName, templates)
 }
 
+// swiftlint:disable:next function_body_length
 func defineExpr() {
   let protocolName = "Expr"
 
@@ -144,6 +145,11 @@ func defineExpr() {
     Template(name: "Assign", fields: [
       Field(name: "name", type: "String"),
       Field(name: "value", type: "Expr")
+    ]),
+    Template(name: "Call", fields: [
+      Field(name: "calee", type: "Expr"),
+//      Field(name: "paren", type: "String"),
+      Field(name: "arguments", type: "[Expr]")
     ])
   ]
 

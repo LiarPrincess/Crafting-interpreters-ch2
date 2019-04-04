@@ -96,7 +96,36 @@ extension Parser {
       let right = try self.unary()
       return UnaryExpr(op: op, right: right)
     }
-    return try self.primary()
+    return try self.call()
+  }
+
+  func call() throws -> Expr {
+    var expr = try self.primary()
+
+    while true {
+      if self.match(.leftParen) {
+        expr = try self.finishCall(expr)
+      }
+      else { break }
+    }
+    return expr
+  }
+
+  private func finishCall(_ callee: Expr) throws -> Expr {
+    var arguments = [Expr]()
+    if !self.check(.rightParen) {
+      repeat {
+        if arguments.count >= 8 {
+          self.error(token: self.peek, error: .tooManyArguments)
+        }
+
+        let arg = try self.expression()
+        arguments.append(arg)
+      } while self.match(.comma)
+    }
+
+    try self.consumeOrThrow(type: .rightParen, error: .missingToken("')'"))
+    return CallExpr(calee: callee, arguments: arguments)
   }
 
   func primary() throws -> Expr {

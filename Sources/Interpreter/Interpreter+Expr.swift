@@ -96,6 +96,26 @@ extension Interpreter: ExprVisitor {
     try self.environment.assign(expr.name, value)
     return value
   }
+
+  func visitCallExpr(_ expr: CallExpr) throws -> Any? {
+    let calee = try self.evaluate(expr.calee)
+
+    var arguments = [Any?]()
+    for arg in expr.arguments {
+      arguments.append(try self.evaluate(arg))
+    }
+
+    guard let function = calee as? Callable else {
+      throw RuntimeError.notCallable(type: self.getType(calee))
+    }
+
+    let argCount = arguments.count
+    if function.arity != argCount {
+      throw RuntimeError.invalidArgumentCount(expected: function.arity, actuall: argCount)
+    }
+
+    return function.call(self, arguments)
+  }
 }
 
 // MARK: - Binary operations

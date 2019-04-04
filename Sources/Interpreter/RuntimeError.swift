@@ -7,6 +7,8 @@ enum RuntimeError: Error, CustomStringConvertible {
   case uninitalizedVariable(name: String)
   case invalidOperandType(op: String, type: String)
   case invalidOperandTypes(op: String, leftType: String, rightType: String)
+  case notCallable(type: String)
+  case invalidArgumentCount(expected: Int, actuall: Int)
 
   var description: String {
     switch self {
@@ -18,6 +20,10 @@ enum RuntimeError: Error, CustomStringConvertible {
       return "Unable to perform '\(op)' with argument of type '\(right)'."
     case let .invalidOperandTypes(op, left, right):
       return "Unable to perform '\(op)' with arguments of type '\(left)' and '\(right)'."
+    case let .notCallable(typ):
+      return "Object of type \(typ) is not callable."
+    case let .invalidArgumentCount(expected, actuall):
+      return "Invalid argument count, expected: \(expected), got: \(actuall)."
     }
   }
 }
