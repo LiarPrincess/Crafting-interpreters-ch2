@@ -58,7 +58,7 @@ extension Interpreter: StmtVisitor {
   }
 
   func visitFunctionStmt(_ stmt: FunctionStmt) throws {
-    let function = Function(declaration: stmt)
+    let function = Function(declaration: stmt, closure: self.environment)
     self.environment.define(stmt.name, .initialized(function))
   }
 

@@ -16,13 +16,14 @@ protocol Callable {
 struct Function: Callable {
 
   let declaration: FunctionStmt
+  let closure: Environment
 
   var arity: Int {
     return self.declaration.parameters.count
   }
 
   func call(_ interpreter: Interpreter, _ arguments: [Any?]) throws -> Any? {
-    let environment = Environment(parent: interpreter.environment)
+    let environment = Environment(parent: self.closure)
     for (index, name) in self.declaration.parameters.enumerated() {
       environment.define(name, .initialized(arguments[index]))
     }
