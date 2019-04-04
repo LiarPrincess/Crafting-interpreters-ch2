@@ -40,7 +40,11 @@ class Interpreter: InterpreterType {
     try statement.accept(self)
   }
 
-  func executeBlock(_ statements: [Stmt], in environment: Environment) throws {
+  func execute(_ statement: Stmt, in environment: Environment) throws {
+    try self.execute([statement], in: environment)
+  }
+
+  func execute(_ statements: [Stmt], in environment: Environment) throws {
     let previous = self.environment
     defer { self.environment = previous }
 

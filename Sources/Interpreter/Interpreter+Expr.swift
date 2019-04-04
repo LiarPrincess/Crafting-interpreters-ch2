@@ -114,7 +114,7 @@ extension Interpreter: ExprVisitor {
       throw RuntimeError.invalidArgumentCount(expected: function.arity, actuall: argCount)
     }
 
-    return function.call(self, arguments)
+    return try function.call(self, arguments)
   }
 }
 

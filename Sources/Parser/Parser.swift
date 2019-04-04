@@ -10,6 +10,8 @@ class Parser: ParserType {
   private let tokens: [Token]
   private var current = 0
 
+  let maxArgCount = 8
+
   init(_ tokens: [Token]) {
     self.tokens = tokens
   }
@@ -61,8 +63,7 @@ class Parser: ParserType {
 
     return self.peek.type == type
   }
-
-  /// Consume if current token is @param otherwise throw error
+  /// Consume current token if it is @param otherwise throw @error
   func consumeOrThrow(type: TokenType, error: ParseError) throws {
     if self.check(type) {
       self.advance()

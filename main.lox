@@ -59,4 +59,8 @@ while (a < 100) {
 
 print "time:";
 print clock();
-// func(5, "foo");
+
+fun testFun(param1, param2) {
+  print "Inside function: " + param1 + param2;
+}
+testFun(5, "foo");

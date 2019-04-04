@@ -143,12 +143,11 @@ func defineExpr() {
       Field(name: "name", type: "String")
     ]),
     Template(name: "Assign", fields: [
-      Field(name: "name", type: "String"),
+      Field(name: "name",  type: "String"),
       Field(name: "value", type: "Expr")
     ]),
     Template(name: "Call", fields: [
-      Field(name: "calee", type: "Expr"),
-//      Field(name: "paren", type: "String"),
+      Field(name: "calee",     type: "Expr"),
       Field(name: "arguments", type: "[Expr]")
     ])
   ]
@@ -167,20 +166,25 @@ func defineStmt() {
       Field(name: "expr", type: "Expr")
     ]),
     Template(name: "Var", fields: [
-      Field(name: "name", type: "String"),
+      Field(name: "name",        type: "String"),
       Field(name: "initializer", type: "Expr?")
     ]),
     Template(name: "Block", fields: [
       Field(name: "statements", type: "[Stmt]")
     ]),
     Template(name: "If", fields: [
-      Field(name: "condition", type: "Expr"),
+      Field(name: "condition",  type: "Expr"),
       Field(name: "thenBranch", type: "Stmt"),
       Field(name: "elseBranch", type: "Stmt?")
     ]),
     Template(name: "While", fields: [
       Field(name: "condition", type: "Expr"),
-      Field(name: "body", type: "Stmt")
+      Field(name: "body",      type: "Stmt")
+    ]),
+    Template(name: "Function", fields: [
+      Field(name: "name",       type: "String"),
+      Field(name: "parameters", type: "[String]"),
+      Field(name: "body",       type: "Stmt")
     ])
   ]
 

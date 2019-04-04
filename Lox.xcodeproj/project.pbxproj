@@ -155,12 +155,12 @@
 		90CA2F1D2254B1320032A643 /* Interpreter */ = {
 			isa = PBXGroup;
 			children = (
+				90CA2F36225627FF0032A643 /* Callable.swift */,
 				90CA2F172253F2020032A643 /* Environment.swift */,
 				90CA2F3422560F2F0032A643 /* RuntimeError.swift */,
 				90CA2F11225375E70032A643 /* Interpreter.swift */,
 				90CA2F3222560E840032A643 /* Interpreter+Stmt.swift */,
 				90CA2F3022560E660032A643 /* Interpreter+Expr.swift */,
-				90CA2F36225627FF0032A643 /* Callable.swift */,
 			);
 			path = Interpreter;
 			sourceTree = "<group>";

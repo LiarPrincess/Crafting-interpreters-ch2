@@ -115,7 +115,7 @@ extension Parser {
     var arguments = [Expr]()
     if !self.check(.rightParen) {
       repeat {
-        if arguments.count >= 8 {
+        if arguments.count >= maxArgCount {
           self.error(token: self.peek, error: .tooManyArguments)
         }
 

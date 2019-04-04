@@ -18,8 +18,7 @@ class AstPrinter: StmtVisitor, ExprVisitor {
   }
 
   func visitBlockStmt(_ stmt: BlockStmt) throws -> String {
-    let childs = try stmt.statements.map { try $0.accept(self) }
-    return self.parenthesize(name: "block", childs: childs)
+    return try self.parenthesize(name: "block", stmts: stmt.statements)
   }
 
   func visitVarStmt(_ stmt: VarStmt) throws -> String {
@@ -48,6 +47,12 @@ class AstPrinter: StmtVisitor, ExprVisitor {
   func visitWhileStmt(_ stmt: WhileStmt) throws -> String {
     let body = self.parenthesize(name: "body", childs: [try self.visit(stmt.body)])
     return self.parenthesize(name: "while", childs: [body])
+  }
+
+  func visitFunctionStmt(_ stmt: FunctionStmt) throws -> String {
+    let name = self.parenthesize(name: "name", childs: [stmt.name])
+    let body = try self.parenthesize(name: "body", stmts: [stmt.body])
+    return self.parenthesize(name: "fun", childs: [name, body])
   }
 
   // MARK: - Expressions
@@ -107,9 +112,13 @@ class AstPrinter: StmtVisitor, ExprVisitor {
     return "(\(name) \(childs.joined(separator: " ")))"
   }
 
-  private func parenthesize(name: String, exprs: Expr...) throws -> String {
-    let childs = try exprs.map { try $0.accept(self) }
+  private func parenthesize(name: String, stmts: [Stmt]) throws -> String {
+    let childs = try stmts.map { try $0.accept(self) }
     return self.parenthesize(name: name, childs: childs)
+  }
+
+  private func parenthesize(name: String, exprs: Expr...) throws -> String {
+    return try self.parenthesize(name: name, exprs: exprs)
   }
 
   private func parenthesize(name: String, exprs: [Expr]) throws -> String {

@@ -24,7 +24,7 @@ extension Interpreter: StmtVisitor {
 
   func visitBlockStmt(_ stmt: BlockStmt) throws {
     let environment = Environment(parent: self.environment)
-    try self.executeBlock(stmt.statements, in: environment)
+    try self.execute(stmt.statements, in: environment)
   }
 
   func visitExpressionStmt(_ stmt: ExpressionStmt) throws {
@@ -55,5 +55,10 @@ extension Interpreter: StmtVisitor {
     while let condition = try self.evaluate(stmt.condition), self.isTruthy(condition) {
       try self.execute(stmt.body)
     }
+  }
+
+  func visitFunctionStmt(_ stmt: FunctionStmt) throws {
+    let function = Function(declaration: stmt)
+    self.environment.define(stmt.name, .initialized(function))
   }
 }
