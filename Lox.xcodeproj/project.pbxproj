@@ -31,6 +31,13 @@
 		90CA2F222254DFB80032A643 /* ScannerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F212254DFB80032A643 /* ScannerError.swift */; };
 		90CA2F242254E02F0032A643 /* ScannerResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F232254E02F0032A643 /* ScannerResult.swift */; };
 		90CA2F272254EBE20032A643 /* Dictionary+Contains.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F262254EBE20032A643 /* Dictionary+Contains.swift */; };
+		90CA2F2922560A210032A643 /* ParserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F2822560A210032A643 /* ParserError.swift */; };
+		90CA2F2B22560A460032A643 /* Parser+Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F2A22560A460032A643 /* Parser+Expr.swift */; };
+		90CA2F2D22560AA90032A643 /* Parser+Stmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F2C22560AA90032A643 /* Parser+Stmt.swift */; };
+		90CA2F2F22560B220032A643 /* Parser+Decl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F2E22560B220032A643 /* Parser+Decl.swift */; };
+		90CA2F3122560E660032A643 /* Interpreter+Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F3022560E660032A643 /* Interpreter+Expr.swift */; };
+		90CA2F3322560E840032A643 /* Interpreter+Stmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F3222560E840032A643 /* Interpreter+Stmt.swift */; };
+		90CA2F3522560F2F0032A643 /* RuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CA2F3422560F2F0032A643 /* RuntimeError.swift */; };
 		OBJ_27 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_8 /* Expr.swift */; };
 		OBJ_28 /* Lox.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Lox.swift */; };
 		OBJ_29 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Parser.swift */; };
@@ -73,6 +80,13 @@
 		90CA2F212254DFB80032A643 /* ScannerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerError.swift; sourceTree = "<group>"; };
 		90CA2F232254E02F0032A643 /* ScannerResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerResult.swift; sourceTree = "<group>"; };
 		90CA2F262254EBE20032A643 /* Dictionary+Contains.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Contains.swift"; sourceTree = "<group>"; };
+		90CA2F2822560A210032A643 /* ParserError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParserError.swift; sourceTree = "<group>"; };
+		90CA2F2A22560A460032A643 /* Parser+Expr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Parser+Expr.swift"; sourceTree = "<group>"; };
+		90CA2F2C22560AA90032A643 /* Parser+Stmt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Parser+Stmt.swift"; sourceTree = "<group>"; };
+		90CA2F2E22560B220032A643 /* Parser+Decl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Parser+Decl.swift"; sourceTree = "<group>"; };
+		90CA2F3022560E660032A643 /* Interpreter+Expr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Interpreter+Expr.swift"; sourceTree = "<group>"; };
+		90CA2F3222560E840032A643 /* Interpreter+Stmt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Interpreter+Stmt.swift"; sourceTree = "<group>"; };
+		90CA2F3422560F2F0032A643 /* RuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeError.swift; sourceTree = "<group>"; };
 		"Lox::Lox::Product" /* Lox */ = {isa = PBXFileReference; lastKnownFileType = text; path = Lox; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Lox::LoxTests::Product" /* LoxTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = LoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_10 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
@@ -126,6 +140,10 @@
 				90CA2F132253B8420032A643 /* Stmt.swift */,
 				90CA2F19225419A90032A643 /* Operator.swift */,
 				OBJ_10 /* Parser.swift */,
+				90CA2F2E22560B220032A643 /* Parser+Decl.swift */,
+				90CA2F2C22560AA90032A643 /* Parser+Stmt.swift */,
+				90CA2F2A22560A460032A643 /* Parser+Expr.swift */,
+				90CA2F2822560A210032A643 /* ParserError.swift */,
 				90CA2F0F2253686C0032A643 /* AstPrinter.swift */,
 				90CA2F0D225358CD0032A643 /* Code-Generation.swift */,
 			);
@@ -136,7 +154,10 @@
 			isa = PBXGroup;
 			children = (
 				90CA2F172253F2020032A643 /* Environment.swift */,
+				90CA2F3422560F2F0032A643 /* RuntimeError.swift */,
 				90CA2F11225375E70032A643 /* Interpreter.swift */,
+				90CA2F3222560E840032A643 /* Interpreter+Stmt.swift */,
+				90CA2F3022560E660032A643 /* Interpreter+Expr.swift */,
 			);
 			path = Interpreter;
 			sourceTree = "<group>";
@@ -301,10 +322,15 @@
 			files = (
 				90CA2F0E225358CD0032A643 /* Code-Generation.swift in Sources */,
 				90CA2F222254DFB80032A643 /* ScannerError.swift in Sources */,
+				90CA2F2922560A210032A643 /* ParserError.swift in Sources */,
 				90CA2F102253686C0032A643 /* AstPrinter.swift in Sources */,
 				OBJ_27 /* Expr.swift in Sources */,
+				90CA2F3122560E660032A643 /* Interpreter+Expr.swift in Sources */,
 				90CA2F272254EBE20032A643 /* Dictionary+Contains.swift in Sources */,
 				90CA2F242254E02F0032A643 /* ScannerResult.swift in Sources */,
+				90CA2F3322560E840032A643 /* Interpreter+Stmt.swift in Sources */,
+				90CA2F2B22560A460032A643 /* Parser+Expr.swift in Sources */,
+				90CA2F2F22560B220032A643 /* Parser+Decl.swift in Sources */,
 				OBJ_28 /* Lox.swift in Sources */,
 				OBJ_29 /* Parser.swift in Sources */,
 				90CA2F142253B8420032A643 /* Stmt.swift in Sources */,
@@ -314,9 +340,11 @@
 				90CA2F1A225419A90032A643 /* Operator.swift in Sources */,
 				90CA2F202254CD610032A643 /* debug.swift in Sources */,
 				OBJ_31 /* SourceRange.swift in Sources */,
+				90CA2F2D22560AA90032A643 /* Parser+Stmt.swift in Sources */,
 				OBJ_32 /* Token.swift in Sources */,
 				OBJ_33 /* TokenType.swift in Sources */,
 				OBJ_34 /* main.swift in Sources */,
+				90CA2F3522560F2F0032A643 /* RuntimeError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

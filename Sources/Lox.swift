@@ -9,7 +9,7 @@ let stderr = FileHandle.standardError
 
 class Lox {
 
-  private static let interpreter = Interpreter()
+  private static let interpreter: InterpreterType = Interpreter()
 
   private static var hadError = false
   private static var hadRuntimeError = false
@@ -60,7 +60,7 @@ class Lox {
     print("")
 
     print("Parsing -> AST")
-    let parser = Parser(scanResult.tokens)
+    let parser: ParserType = Parser(scanResult.tokens)
     guard let statements = parser.parse() else {
       return
     }

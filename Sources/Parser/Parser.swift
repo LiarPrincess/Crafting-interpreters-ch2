@@ -2,23 +2,11 @@
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-// swiftlint:disable file_length
-
-enum ParseError: Error, CustomStringConvertible {
-  case missingToken(String)
-  case expectedExpression
-  case invalidAssignment
-
-  var description: String {
-    switch self {
-    case let .missingToken(token): return "Expected \(token)."
-    case .expectedExpression: return "Expected expression."
-    case .invalidAssignment: return "Invalid assignment target."
-    }
-  }
+protocol ParserType {
+  func parse() -> [Stmt]?
 }
 
-class Parser {
+class Parser: ParserType {
   private let tokens: [Token]
   private var current = 0
 
@@ -36,300 +24,16 @@ class Parser {
     return statements
   }
 
-  // MARK: - Statements
-
-  private func declaration() -> Stmt? {
-    do {
-      if self.match(.var) {
-        return try self.varDeclaration()
-      }
-
-      return try self.statement()
-    }
-    catch {
-      self.synchronize()
-      return nil
-    }
-  }
-
-  private func varDeclaration() throws -> Stmt {
-    let current = self.peek
-
-    guard case let TokenType.identifier(name) = current.type else {
-      throw ParseError.missingToken("variable name")
-    }
-    self.advance()
-
-    var expr: Expr?
-    if self.match(.equal) {
-      expr = try self.expression()
-    }
-
-    try self.consumeOrThrow(type: .semicolon, error: .missingToken("';'"))
-    return VarStmt(name: name, initializer: expr)
-  }
-
-  private func statement() throws -> Stmt {
-    if self.match(.print) {
-      return try self.printStatement()
-    }
-
-    if self.match(.leftBrace) {
-      return BlockStmt(statements: try self.blockStatement())
-    }
-
-    if self.match(.if) {
-      return try self.ifStatement()
-    }
-
-    if self.match(.while) {
-      return try self.whileStatement()
-    }
-
-    if self.match(.for) {
-      return try self.forStatement()
-    }
-
-    return try self.expressionStatement()
-  }
-
-  private func printStatement() throws -> Stmt {
-    let expr = try self.expression()
-    try self.consumeOrThrow(type: .semicolon, error: .missingToken(";"))
-    return PrintStmt(expr: expr)
-  }
-
-  private func blockStatement() throws -> [Stmt] {
-    var statements = [Stmt]()
-
-    while !self.check(.rightBrace), !self.isAtEnd {
-      if let declaration = self.declaration() {
-        statements.append(declaration)
-      }
-    }
-
-    try self.consumeOrThrow(type: .rightBrace, error: .missingToken("'}'"))
-    return statements
-  }
-
-  private func ifStatement() throws -> Stmt {
-    try self.consumeOrThrow(type: .leftParen, error: .missingToken("'('"))
-    let condition = try self.expression()
-    try self.consumeOrThrow(type: .rightParen, error: .missingToken("')'"))
-
-    let thenBranch = try self.statement()
-
-    var elseBranch: Stmt?
-    if self.match(.else) {
-      elseBranch = try self.statement()
-    }
-
-    return IfStmt(condition: condition, thenBranch: thenBranch, elseBranch: elseBranch)
-  }
-
-  private func whileStatement() throws -> Stmt {
-    try self.consumeOrThrow(type: .leftParen, error: .missingToken("'('"))
-    let condition = try self.expression()
-    try self.consumeOrThrow(type: .rightParen, error: .missingToken("')'"))
-
-    let body = try self.statement()
-    return WhileStmt(condition: condition, body: body)
-  }
-
-  private func forStatement() throws -> Stmt {
-    try self.consumeOrThrow(type: .leftParen, error: .missingToken("'('"))
-    let initializer = try self.forStatementInitializer()
-    let condition = try self.forStatementCondition()
-    let increment = try self.forStatementIncrement()
-    let body = try self.statement()
-
-    //  {
-    //    var i = 0;
-    //    while (i < 10) {
-    //      print i;
-    //      i = i + 1;
-    //    }
-    //  }
-
-    var result = body
-    if let increment = increment {
-      result = BlockStmt(statements: [result, ExpressionStmt(expr: increment)])
-    }
-
-    let whileCondition = condition ?? BoolExpr(value: true)
-    result = WhileStmt(condition: whileCondition, body: result)
-
-    if let initializer = initializer {
-      result = BlockStmt(statements: [initializer, result])
-    }
-
-    return result
-  }
-
-  private func forStatementInitializer() throws -> Stmt? {
-    if self.match(.semicolon) { return nil }
-    if self.match(.var) { return try self.varDeclaration() }
-    return try self.expressionStatement()
-  }
-
-  private func forStatementCondition() throws -> Expr? {
-    if self.match(.semicolon) { return nil }
-    let expr = try self.expression()
-    try self.consumeOrThrow(type: .semicolon, error: .missingToken("';'"))
-    return expr
-  }
-
-  private func forStatementIncrement() throws -> Expr? {
-    if self.match(.rightParen) { return nil }
-    let expr = try self.expression()
-    try self.consumeOrThrow(type: .rightParen, error: .missingToken("')'"))
-    return expr
-  }
-
-  private func expressionStatement() throws -> Stmt {
-    let expr = try self.expression()
-    try self.consumeOrThrow(type: .semicolon, error: .missingToken("';'"))
-    return ExpressionStmt(expr: expr)
-  }
-
-  // MARK: - Expressions
-
-  private func expression() throws -> Expr {
-    return try self.assignment()
-  }
-
-  private func assignment() throws -> Expr {
-    let expr = try self.or()
-
-    if self.match(.equal) {
-      let equals = self.previous
-      let value = try self.assignment()
-
-      if let expr = expr as? VariableExpr {
-        let name = expr.name
-        return AssignExpr(name: name, value: value)
-      }
-
-      self.error(token: equals, error: .invalidAssignment)
-    }
-
-    return expr
-  }
-
-  private func or() throws -> Expr {
-    var expr = try self.and()
-
-    while self.match(.or) {
-      let right = try self.and()
-      expr = LogicalExpr(op: .or, left: expr, right: right)
-    }
-    return expr
-  }
-
-  private func and() throws -> Expr {
-    var expr = try self.equality()
-
-    while self.match(.and) {
-      let right = try self.equality()
-      expr = LogicalExpr(op: .and, left: expr, right: right)
-    }
-    return expr
-  }
-
-  private func equality() throws -> Expr {
-    var expr = try self.comparison()
-
-    while self.match(.bangEqual, .equalEqual) {
-      let op = self.toOperator(self.previous.type)
-      let right = try self.comparison()
-      expr = BinaryExpr(op: op, left: expr, right: right)
-    }
-    return expr
-  }
-
-  private func comparison() throws -> Expr {
-    var expr = try self.addition()
-
-    while self.match(.greater, .greaterEqual, .less, .lessEqual) {
-      let op = self.toOperator(self.previous.type)
-      let right = try self.addition()
-      expr = BinaryExpr(op: op, left: expr, right: right)
-    }
-    return expr
-  }
-
-  private func addition() throws -> Expr{
-    var expr = try self.multiplication()
-
-    while self.match(.minus, .plus) {
-      let op = self.toOperator(self.previous.type)
-      let right = try self.multiplication()
-      expr = BinaryExpr(op: op, left: expr, right: right)
-    }
-    return expr
-  }
-
-  private func multiplication() throws -> Expr{
-    var expr = try self.unary()
-
-    while self.match(.slash, .star) {
-      let op = self.toOperator(self.previous.type)
-      let right = try self.unary()
-      expr = BinaryExpr(op: op, left: expr, right: right)
-    }
-    return expr
-  }
-
-  private func unary() throws -> Expr {
-    if self.match(.bang, .minus) {
-      let op = self.toOperator(self.previous.type)
-      let right = try self.unary()
-      return UnaryExpr(op: op, right: right)
-    }
-    return try self.primary()
-  }
-
-  private func primary() throws -> Expr {
-    if self.match(.false) { return BoolExpr(value: false) }
-    if self.match(.true) { return BoolExpr(value: true) }
-    if self.match(.nil) { return NilExpr() }
-
-    let current = self.peek
-
-    if case let TokenType.number(value) = current.type {
-      self.advance()
-      return NumberExpr(value: value)
-    }
-
-    if case let TokenType.string(value) = current.type {
-      self.advance()
-      return StringExpr(value: value)
-    }
-
-    if case let TokenType.identifier(name) = current.type {
-      self.advance()
-      return VariableExpr(name: name)
-    }
-
-    if self.match(.leftParen) {
-      let expr = try self.expression()
-      try self.consumeOrThrow(type: .rightParen, error: .missingToken("')'"))
-      return GroupingExpr(expr: expr)
-    }
-
-    throw self.error(token: current, error: .expectedExpression)
-  }
-
   // MARK: - Traversal
 
   /// Have we arrived at the last token?
-  private var isAtEnd: Bool {
+  var isAtEnd: Bool {
     return self.peek.type == TokenType.eof
   }
 
   /// Return current token and advance to the next one
   @discardableResult
-  private func advance() -> Token {
+  func advance() -> Token {
     let current = self.peek
 
     if !self.isAtEnd {
@@ -340,17 +44,17 @@ class Parser {
   }
 
   /// Current token
-  private var peek: Token {
+  var peek: Token {
     return self.tokens[self.current]
   }
 
   /// Previous token
-  private var previous: Token {
+  var previous: Token {
     return self.tokens[self.current - 1]
   }
 
   /// Check if current token is @param
-  private func check(_ type: TokenType) -> Bool {
+  func check(_ type: TokenType) -> Bool {
     if self.isAtEnd {
       return false
     }
@@ -359,7 +63,7 @@ class Parser {
   }
 
   /// Consume if current token is @param otherwise throw error
-  private func consumeOrThrow(type: TokenType, error: ParseError) throws {
+  func consumeOrThrow(type: TokenType, error: ParseError) throws {
     if self.check(type) {
       self.advance()
       return
@@ -369,7 +73,7 @@ class Parser {
   }
 
   /// Consume if current token is in @param
-  private func match(_ types: TokenType...) -> Bool {
+  func match(_ types: TokenType...) -> Bool {
     for type in types {
       if self.check(type) {
         self.advance()
@@ -382,15 +86,15 @@ class Parser {
 
   // MARK: - Operators
 
-  private func toOperator(_ tokenType: TokenType) -> Operator {
+  func toOperator(_ tokenType: TokenType) -> Operator {
     let op = Operator.fromToken(tokenType)
-    assert(op != nil, "Unable to map \(self.previous.type) to operator.")
+    assert(op != nil, "\(self.previous.type) cannot be converted to operator")
     return op!
   }
 
   // MARK: - Errors
 
-  private func synchronize() {
+  func synchronize() {
     self.advance()
 
     while !self.isAtEnd {
@@ -405,7 +109,7 @@ class Parser {
     }
   }
 
-  private func error(token: Token, error: ParseError) -> ParseError {
+  func error(token: Token, error: ParseError) -> ParseError {
     Lox.error(location: SourceLocation.tmp, message: error.description)
     return error
   }

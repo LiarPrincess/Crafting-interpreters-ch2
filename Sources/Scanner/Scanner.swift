@@ -149,12 +149,19 @@ class Scanner {
   }
 
   private func charAt(_ index: Int) -> UnicodeScalar? {
+    assert(index >= 0, "Index cannot be negative")
+    assert(index < self.source.count, "Index out of bounds")
+
     let characterIndex = self.sourceIndex + index
     return characterIndex < self.source.count ? self.source[characterIndex] : nil
   }
 
   private func charactersIn(_ range: Range<Int>) -> String {
-    assert(range.endIndex < self.source.count, "Source index out of bounds")
+    assert(range.startIndex >= 0, "Index cannot be negative")
+    assert(range.startIndex < self.source.count, "Index out of bounds")
+    assert(range.endIndex >= 0, "Index cannot be negative")
+    assert(range.endIndex < self.source.count, "Index out of bounds")
+
     let characters = self.source[range]
     return characters.map(String.init).joined()
   }
