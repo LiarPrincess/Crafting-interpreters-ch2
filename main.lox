@@ -57,4 +57,6 @@ while (a < 100) {
   b = temp + b;
 }
 
-func(5, "foo");
+print "time:";
+print clock();
+// func(5, "foo");

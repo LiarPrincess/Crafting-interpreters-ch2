@@ -11,7 +11,13 @@ class Interpreter: InterpreterType {
   typealias StmtResult = Void
   typealias ExprResult = Any?
 
-  var environment = Environment()
+  private let globals: Environment = {
+    let result = Environment()
+    result.define("clock", .initialized(ClockCallable()))
+    return result
+  }()
+
+  lazy var environment = self.globals
 
   func interpret(_ statements: [Stmt]) {
     do {
