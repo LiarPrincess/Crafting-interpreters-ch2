@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		907D6FC62257E3A3001199D4 /* ScopeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907D6FC42257E381001199D4 /* ScopeInfo.swift */; };
 		OBJ_108 /* LoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_43 /* LoxTests.swift */; };
 		OBJ_109 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_44 /* XCTestManifests.swift */; };
 		OBJ_57 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* main.swift */; };
@@ -73,6 +74,7 @@
 
 /* Begin PBXFileReference section */
 		907D6FC22257DB96001199D4 /* main.lox */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.lox; sourceTree = "<group>"; };
+		907D6FC42257E381001199D4 /* ScopeInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScopeInfo.swift; sourceTree = "<group>"; };
 		"Lox::Code generator::Product" /* Code generator */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Code generator"; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Lox::Lox::Product" /* Lox */ = {isa = PBXFileReference; lastKnownFileType = text; path = Lox; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Lox::LoxTests::Product" /* LoxTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = LoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -137,12 +139,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		907D6FC32257E360001199D4 /* Resolver */ = {
+			isa = PBXGroup;
+			children = (
+				907D6FC42257E381001199D4 /* ScopeInfo.swift */,
+				OBJ_19 /* Resolver.swift */,
+			);
+			path = Resolver;
+			sourceTree = "<group>";
+		};
 		OBJ_10 /* Lox */ = {
 			isa = PBXGroup;
 			children = (
 				OBJ_32 /* Scanner */,
 				OBJ_22 /* Parser */,
 				OBJ_13 /* Interpreter */,
+				907D6FC32257E360001199D4 /* Resolver */,
 				OBJ_11 /* Extensions */,
 				OBJ_21 /* Lox.swift */,
 				OBJ_40 /* debug.swift */,
@@ -168,7 +180,6 @@
 				OBJ_18 /* Interpreter.swift */,
 				OBJ_16 /* Interpreter+Expr.swift */,
 				OBJ_17 /* Interpreter+Stmt.swift */,
-				OBJ_19 /* Resolver.swift */,
 				OBJ_20 /* RuntimeError.swift */,
 			);
 			path = Interpreter;
@@ -409,6 +420,7 @@
 				OBJ_73 /* AstPrinter.swift in Sources */,
 				OBJ_74 /* Expr.swift in Sources */,
 				OBJ_75 /* Operator.swift in Sources */,
+				907D6FC62257E3A3001199D4 /* ScopeInfo.swift in Sources */,
 				OBJ_76 /* Parser+Decl.swift in Sources */,
 				OBJ_77 /* Parser+Expr.swift in Sources */,
 				OBJ_78 /* Parser+Stmt.swift in Sources */,

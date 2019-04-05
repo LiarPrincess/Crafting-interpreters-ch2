@@ -51,7 +51,7 @@ class Environment {
 
   /// Get variable value
   func get(_ name: String) throws -> Any? {
-    printDebug(message: "Looking for ordinal variable: \(name)")
+    printDebug("Looking for ordinal variable: \(name)")
 
     if let value = self.values[name] {
       switch value {
@@ -70,7 +70,7 @@ class Environment {
 
   /// Get variable value from environment at given depth
   func get(_ name: String, at depth: Int) throws -> Any? {
-    printDebug(message: "Looking for local variable: \(name) at depth: \(depth)")
+    printDebug("Looking for local variable: \(name) at depth: \(depth)")
 
     let environment = self.getAncestor(at: depth)
     assert(environment != nil, "Invalid environment depth")

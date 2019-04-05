@@ -5,7 +5,7 @@
 enum ResolverErrors: Error, CustomStringConvertible {
   case topLevelReturn
   case variableAlreadyDeclared(name: String)
-  case variableSelfReferenceInInit(name: String)
+  case variableUsedInOwnInitializer(name: String)
 
   var description: String {
     switch self {
@@ -13,15 +13,10 @@ enum ResolverErrors: Error, CustomStringConvertible {
       return "Cannot return from top-level code."
     case let .variableAlreadyDeclared(name):
       return "Variable '\(name)' was already declared in this scope."
-    case let .variableSelfReferenceInInit(name):
+    case let .variableUsedInOwnInitializer(name):
       return "Cannot read variable '\(name)' in its own initializer."
     }
   }
-}
-
-private enum VariableState {
-  case declared
-  case initialized
 }
 
 private enum FunctionType {
@@ -35,7 +30,7 @@ class Resolver: StmtVisitor, ExprVisitor {
   typealias ExprResult = Void
 
   private let interpreter: Interpreter
-  private var scopes = Array<[String:VariableState]>()
+  private var scopes = [ScopeInfo]()
   private var currentFunction = FunctionType.none
 
   init(_ interpreter: Interpreter) {
@@ -122,13 +117,15 @@ class Resolver: StmtVisitor, ExprVisitor {
   }
 
   func visitVariableExpr(_ expr: VariableExpr) throws {
-    guard var scope = self.scopes.last else { return }
+    guard let scope = self.scopes.last else { return }
 
-    let currentState = scope[expr.name]
-    if currentState == .some(.declared) {
-      throw ResolverErrors.variableSelfReferenceInInit(name: expr.name)
+    if let variable = scope.variables[expr.name], variable.state == .declared {
+      throw ResolverErrors.variableUsedInOwnInitializer(name: expr.name)
     }
 
+    if let variable = scope.variables[expr.name] {
+      variable.isUsed = true
+    }
     self.resolveLocal(expr, expr.name)
   }
 
@@ -179,8 +176,8 @@ class Resolver: StmtVisitor, ExprVisitor {
 
   private func resolveLocal(_ expr: Expr, _ name: String) {
     for (depth, scope) in self.scopes.reversed().enumerated() {
-      if scope.contains(name) {
-        printDebug(message: "variable: \(name) is at depth: \(depth)")
+      if scope.variables.contains(name) {
+        printDebug("variable: \(name) is at depth: \(depth)")
         self.interpreter.resolve(expr, depth)
         return
       }
@@ -192,28 +189,37 @@ class Resolver: StmtVisitor, ExprVisitor {
   // MARK: - Scope
 
   private func beginScope() {
-    self.scopes.append([:])
+    self.scopes.append(ScopeInfo())
   }
 
   private func endScope() {
+    if let scope = self.scopes.last {
+      for (name, variable) in scope.variables where !variable.isUsed {
+        print("Unused variable: \(name)")
+      }
+    }
+
     self.scopes.removeLast()
   }
 
   private func declare(_ name: String) throws {
-    guard !self.scopes.isEmpty else { return }
+    guard let scope = self.scopes.last else { return }
 
-    let lastIndex = self.scopes.count - 1
-    if self.scopes[lastIndex].contains(name) {
+    if scope.variables.contains(name) {
       throw ResolverErrors.variableAlreadyDeclared(name: name)
     }
 
-    self.scopes[lastIndex][name] = .declared
+    scope.variables[name] = VariableInfo(state: .declared)
   }
 
   private func define(_ name: String) {
-    guard !self.scopes.isEmpty else { return }
+    guard let scope = self.scopes.last else { return }
 
-    let lastIndex = self.scopes.count - 1
-    self.scopes[lastIndex][name] = .initialized
+    if let variable = scope.variables[name] {
+      variable.state = .initialized
+    }
+    else {
+      scope.variables[name] = VariableInfo(state: .initialized)
+    }
   }
 }

@@ -14,7 +14,7 @@ private func getFileName(_ file: StaticString) -> String {
   return fileString
 }
 
-func printDebug(message:  String = "",
+func printDebug(_ message:  String = "",
                 file:     StaticString = #file,
                 function: StaticString = #function,
                 line:     UInt = #line) {

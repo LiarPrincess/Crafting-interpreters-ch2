@@ -96,4 +96,8 @@ fun bad() {
 }
 
 print "> Testing top-level return - uncomment to get error";
-return 5;
+// return 5;
+
+{
+  var unusedVariable = "5";
+}

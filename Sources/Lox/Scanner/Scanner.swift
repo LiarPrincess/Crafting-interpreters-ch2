@@ -174,7 +174,7 @@ class Scanner {
 
   private func createToken(type: TokenType, start: SourceLocation) -> Token {
     let range = SourceRange(start: start, end: self.location)
-    printDebug(message: "Creating token: \(type)")
+    printDebug("Creating token: \(type)")
     return Token(type: type, range: range)
   }
 
