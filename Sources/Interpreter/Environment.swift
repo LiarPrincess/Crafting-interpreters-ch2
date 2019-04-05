@@ -2,7 +2,7 @@
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-enum Value {
+private enum Value {
   case uninitialized
   case initialized(Any?)
 }
@@ -11,18 +11,21 @@ class Environment {
   private let parent: Environment?
   private var values = [String:Value]()
 
-  init() {
-    self.parent = nil
-  }
-
-  init(parent: Environment) {
+  init(parent: Environment? = nil) {
     self.parent = parent
   }
 
-  func define(_ name: String, _ value: Value) {
-    self.values[name] = value
+  /// Define uninitialized variable
+  func define(_ name: String) {
+    self.values[name] = .uninitialized
   }
 
+  /// Define initialized variable
+  func define(_ name: String, _ value: Any?) {
+    self.values[name] = .initialized(value)
+  }
+
+  /// Re-assign variable
   func assign(_ name: String, _ value: Any?) throws {
     if self.values.contains(name) {
       values[name] = .initialized(value)
@@ -38,6 +41,7 @@ class Environment {
     throw RuntimeError.undefinedVariable(name: name)
   }
 
+  /// Get variable value
   func get(_ name: String) throws -> Any? {
     if let value = self.values[name] {
       switch value {

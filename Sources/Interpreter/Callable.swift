@@ -25,7 +25,7 @@ struct Function: Callable {
   func call(_ interpreter: Interpreter, _ arguments: [Any?]) throws -> Any? {
     let environment = Environment(parent: self.closure)
     for (index, name) in self.declaration.parameters.enumerated() {
-      environment.define(name, .initialized(arguments[index]))
+      environment.define(name, arguments[index])
     }
 
     do {

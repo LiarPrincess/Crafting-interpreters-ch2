@@ -34,9 +34,9 @@ extension Interpreter: StmtVisitor {
   func visitVarStmt(_ stmt: VarStmt) throws {
     if let initializer = stmt.initializer {
       let value = try self.evaluate(initializer)
-      self.environment.define(stmt.name, .initialized(value))
+      self.environment.define(stmt.name, value)
     } else {
-      self.environment.define(stmt.name, .uninitialized)
+      self.environment.define(stmt.name)
     }
   }
 
@@ -59,7 +59,7 @@ extension Interpreter: StmtVisitor {
 
   func visitFunctionStmt(_ stmt: FunctionStmt) throws {
     let function = Function(declaration: stmt, closure: self.environment)
-    self.environment.define(stmt.name, .initialized(function))
+    self.environment.define(stmt.name, function)
   }
 
   func visitReturnStmt(_ stmt: ReturnStmt) throws {

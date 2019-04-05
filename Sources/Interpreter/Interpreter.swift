@@ -13,7 +13,7 @@ class Interpreter: InterpreterType {
 
   private let globals: Environment = {
     let result = Environment()
-    result.define("clock", .initialized(ClockCallable()))
+    result.define("clock", ClockCallable())
     return result
   }()
 
