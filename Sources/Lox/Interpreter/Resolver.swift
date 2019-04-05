@@ -3,11 +3,14 @@
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
 enum ResolverErrors: Error, CustomStringConvertible {
+  case topLevelReturn
   case variableAlreadyDeclared(name: String)
   case variableSelfReferenceInInit(name: String)
 
   var description: String {
     switch self {
+    case .topLevelReturn:
+      return "Cannot return from top-level code."
     case let .variableAlreadyDeclared(name):
       return "Variable '\(name)' was already declared in this scope."
     case let .variableSelfReferenceInInit(name):
@@ -21,6 +24,11 @@ private enum VariableState {
   case initialized
 }
 
+private enum FunctionType {
+  case none
+  case function
+}
+
 class Resolver: StmtVisitor, ExprVisitor {
 
   typealias StmtResult = Void
@@ -28,6 +36,7 @@ class Resolver: StmtVisitor, ExprVisitor {
 
   private let interpreter: Interpreter
   private var scopes = Array<[String:VariableState]>()
+  private var currentFunction = FunctionType.none
 
   init(_ interpreter: Interpreter) {
     self.interpreter = interpreter
@@ -74,10 +83,14 @@ class Resolver: StmtVisitor, ExprVisitor {
     try self.declare(stmt.name)
     self.define(stmt.name)
 
-    try self.resolveFunction(stmt)
+    try self.resolveFunction(stmt, type: .function)
   }
 
   func visitReturnStmt(_ stmt: ReturnStmt) throws {
+    guard self.currentFunction != .none else {
+      throw ResolverErrors.topLevelReturn
+    }
+
     if let value = stmt.value {
       try self.resolve(value)
     }
@@ -148,7 +161,9 @@ class Resolver: StmtVisitor, ExprVisitor {
     }
   }
 
-  private func resolveFunction(_ stmt: FunctionStmt) throws {
+  private func resolveFunction(_ stmt: FunctionStmt, type: FunctionType) throws {
+    let enclosingFunction = self.currentFunction
+    self.currentFunction = type
     self.beginScope()
 
     for param in stmt.parameters {
@@ -157,7 +172,21 @@ class Resolver: StmtVisitor, ExprVisitor {
     }
 
     try self.resolve(stmt.body)
+
     self.endScope()
+    self.currentFunction = enclosingFunction
+  }
+
+  private func resolveLocal(_ expr: Expr, _ name: String) {
+    for (depth, scope) in self.scopes.reversed().enumerated() {
+      if scope.contains(name) {
+        printDebug(message: "variable: \(name) is at depth: \(depth)")
+        self.interpreter.resolve(expr, depth)
+        return
+      }
+    }
+
+    // Not found. Assume it is global.
   }
 
   // MARK: - Scope
@@ -186,17 +215,5 @@ class Resolver: StmtVisitor, ExprVisitor {
 
     let lastIndex = self.scopes.count - 1
     self.scopes[lastIndex][name] = .initialized
-  }
-
-  private func resolveLocal(_ expr: Expr, _ name: String) {
-    for (depth, scope) in self.scopes.reversed().enumerated() {
-      if scope.contains(name) {
-        printDebug(message: "variable: \(name) is at depth: \(depth)")
-        self.interpreter.resolve(expr, depth)
-        return
-      }
-    }
-
-    // Not found. Assume it is global.
   }
 }
