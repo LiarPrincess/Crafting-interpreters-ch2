@@ -51,7 +51,7 @@ extension Parser {
     try self.consumeOrThrow(type: .rightParen, error: .missingToken("')'"))
 
     try self.consumeOrThrow(type: .leftBrace, error: .missingToken("'{'"))
-    let body = try self.blockStatement()
+    let body = try self.blockStatements()
 
     return FunctionStmt(name: name, parameters: parameters, body: body)
   }

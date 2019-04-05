@@ -4,12 +4,12 @@
 
 import Foundation
 
-let stdout = FileHandle.standardOutput
-let stderr = FileHandle.standardError
+private let stdout = FileHandle.standardOutput
+private let stderr = FileHandle.standardError
 
 class Lox {
 
-  private static let interpreter: InterpreterType = Interpreter()
+  private static let interpreter = Interpreter()
 
   private static var hadError = false
   private static var hadRuntimeError = false
@@ -75,6 +75,16 @@ class Lox {
     if hadError {
       return
     }
+
+    print("Resolver")
+    let resolver = Resolver(self.interpreter)
+    do {
+      try resolver.resolve(statements)
+    } catch let error {
+      print(error)
+      return
+    }
+    print("")
 
     print("Result")
     interpreter.interpret(statements)

@@ -21,75 +21,99 @@ private func defineLicense() {
   print("")
 }
 
-private func getVisitorName(_ protocolName: String) -> String {
-  return "\(protocolName)Visitor"
+private func getVisitorName(_ baseClassName: String) -> String {
+  return "\(baseClassName)Visitor"
 }
 
-private func getTypeName(_ protocolName: String, _ template: Template) -> String {
-  return "\(template.name)\(protocolName)"
+private func getTypeName(_ baseClassName: String, _ template: Template) -> String {
+  return "\(template.name)\(baseClassName)"
 }
 
-private func getVisitorResultName(_ protocolName: String) -> String {
-  return "\(protocolName)Result"
+private func getVisitorResultName(_ baseClassName: String) -> String {
+  return "\(baseClassName)Result"
 }
 
-private func defineVisitorProtocol(_ protocolName: String, _ templates: [Template]) {
-  let visitorName = getVisitorName(protocolName)
-  let visitorResult = getVisitorResultName(protocolName)
-  let protocolNameLowercase = protocolName.lowercased()
+private func defineVisitorProtocol(_ baseClassName: String, _ templates: [Template]) {
+  let visitorName = getVisitorName(baseClassName)
+  let visitorResult = getVisitorResultName(baseClassName)
+  let baseClassNameLowercase = baseClassName.lowercased()
 
   print("protocol \(visitorName) {")
   print("  associatedtype \(visitorResult)")
   print("")
 
   for template in templates {
-    let type = getTypeName(protocolName, template)
+    let type = getTypeName(baseClassName, template)
     print("  @discardableResult")
-    print("  func visit\(type)(_ \(protocolNameLowercase): \(type)) throws -> \(visitorResult)")
+    print("  func visit\(type)(_ \(baseClassNameLowercase): \(type)) throws -> \(visitorResult)")
   }
   print("}")
   print("")
 
   print("extension \(visitorName) {")
-  print("  func visit(_ \(protocolNameLowercase): \(protocolName)) throws -> \(visitorResult) {")
-  print("    switch \(protocolNameLowercase) {")
+  print("  func visit(_ \(baseClassNameLowercase): \(baseClassName)) throws -> \(visitorResult) {")
+  print("    switch \(baseClassNameLowercase) {")
   for template in templates {
-    let type = getTypeName(protocolName, template)
-    print("    case let \(protocolNameLowercase) as \(type):")
-    print("      return try self.visit\(type)(\(protocolNameLowercase))")
+    let type = getTypeName(baseClassName, template)
+    print("    case let \(baseClassNameLowercase) as \(type):")
+    print("      return try self.visit\(type)(\(baseClassNameLowercase))")
   }
   print("    default:")
-  print("      fatalError(\"Unknown \(protocolNameLowercase) \\(\(protocolNameLowercase))\")")
+  print("      fatalError(\"Unknown \(baseClassNameLowercase) \\(\(baseClassNameLowercase))\")")
   print("    }")
   print("  }")
   print("}")
   print("")
 }
 
-private func defineBaseProtcol(_ protocolName: String) {
-  let visitorName = getVisitorName(protocolName)
-  let visitorResult = getVisitorResultName(protocolName)
+private func defineBaseClass(_ baseClassName: String) {
+  let visitorName = getVisitorName(baseClassName)
+  let visitorResult = getVisitorResultName(baseClassName)
 
-  print("protocol \(protocolName) {")
-  print("  func accept<V: \(visitorName), R>(_ visitor: V) throws -> R where R == V.\(visitorResult)")
+  print("class \(baseClassName): Equatable, Hashable {")
+  print("")
+
+  print("  func accept<V: \(visitorName), R>(_ visitor: V) throws -> R where R == V.\(visitorResult) {")
+  print("    fatalError(\"Accept metod should be overriden in subclass\")")
+  print("  }")
+  print("")
+
+  print("  static func == (lhs: \(baseClassName), rhs: \(baseClassName)) -> Bool {")
+  print("    return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)")
+  print("  }")
+
+  print("  func hash(into hasher: inout Hasher) {")
+  print("    hasher.combine(ObjectIdentifier(self).hashValue)")
+  print("  }")
+
   print("}")
   print("")
 }
 
-private func defineTypes(_ protocolName: String, _ templates: [Template]) {
-  let visitorName = getVisitorName(protocolName)
-  let visitorResult = getVisitorResultName(protocolName)
+private func defineTypes(_ baseClassName: String, _ templates: [Template]) {
+  let visitorName = getVisitorName(baseClassName)
+  let visitorResult = getVisitorResultName(baseClassName)
 
   for template in templates {
-    let type = getTypeName(protocolName, template)
-    print("struct \(type): \(protocolName) {")
+    let type = getTypeName(baseClassName, template)
+    print("class \(type): \(baseClassName) {")
 
     for field in template.fields {
       print("  let \(field.name): \(field.type)")
     }
     print("")
 
-    print("  func accept<V: \(visitorName), R>(_ visitor: V) throws -> R where R == V.\(visitorResult) {")
+    if !template.fields.isEmpty {
+      let ctorParameters = template.fields.map { "\($0.name): \($0.type)" }.joined(separator: ", ")
+      print("  init(\(ctorParameters)) {")
+      for field in template.fields {
+        print("    self.\(field.name) = \(field.name)")
+      }
+      print("  }")
+      print("")
+    }
+
+    print("  override func accept<V: \(visitorName), R>(_ visitor: V) throws -> R where R == V.\(visitorResult) {")
     print("    return try visitor.visit\(type)(self)")
     print("  }")
 
@@ -98,16 +122,19 @@ private func defineTypes(_ protocolName: String, _ templates: [Template]) {
   }
 }
 
-private func define(_ protocolName: String, _ templates: [Template]) {
+private func define(_ baseClassName: String, _ templates: [Template], to path: String) {
+  freopen(path, "w", stdout)
+  defer { fclose(stdout) }
+
   defineLicense()
-  defineVisitorProtocol(protocolName, templates)
-  defineBaseProtcol(protocolName)
-  defineTypes(protocolName, templates)
+  defineVisitorProtocol(baseClassName, templates)
+  defineBaseClass(baseClassName)
+  defineTypes(baseClassName, templates)
 }
 
 // swiftlint:disable:next function_body_length
-func defineExpr() {
-  let protocolName = "Expr"
+func writeExpr(to path: String) {
+  let baseClassName = "Expr"
 
   let templates = [
     Template(name: "Bool", fields: [
@@ -153,11 +180,11 @@ func defineExpr() {
     ])
   ]
 
-  define(protocolName, templates)
+  define(baseClassName, templates, to: path)
 }
 
-func defineStmt() {
-  let protocolName = "Stmt"
+func writeStmt(to path: String) {
+  let baseClassName = "Stmt"
 
   let templates = [
     Template(name: "Print", fields: [
@@ -185,12 +212,25 @@ func defineStmt() {
     Template(name: "Function", fields: [
       Field(name: "name",       type: "String"),
       Field(name: "parameters", type: "[String]"),
-      Field(name: "body",       type: "Stmt")
+      Field(name: "body",       type: "[Stmt]")
     ]),
     Template(name: "Return", fields: [
       Field(name: "value", type: "Expr?")
     ])
   ]
 
-  define(protocolName, templates)
+  define(baseClassName, templates, to: path)
 }
+
+let currentFile = URL(fileURLWithPath: #file)
+let sourcesDir = currentFile.deletingLastPathComponent().deletingLastPathComponent()
+let parserDir = sourcesDir.appendingPathComponent("Lox").appendingPathComponent("Parser")
+
+let exprFile = parserDir.appendingPathComponent("Expr.swift")
+let stmtFile = parserDir.appendingPathComponent("Stmt.swift")
+
+//print("Writing expr to: '\(exprFile)'")
+//print("Writing stmt to: '\(stmtFile)'")
+//
+//writeExpr(to: exprFile.path)
+//writeStmt(to: stmtFile.path)

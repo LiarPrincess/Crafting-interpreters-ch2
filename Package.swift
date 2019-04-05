@@ -7,8 +7,11 @@ let package = Package(
   targets: [
     .target(
       name: "Lox",
-      dependencies: [],
-      path: "Sources"
+      dependencies: []
+    ),
+    .target(
+      name: "Code generator",
+      dependencies: []
     ),
     .testTarget(
       name: "LoxTests",

@@ -88,12 +88,28 @@ extension Interpreter: ExprVisitor {
   }
 
   func visitVariableExpr(_ expr: VariableExpr) throws -> Any? {
-    return try self.environment.get(expr.name)
+    return try self.lookUpVariable(expr.name, expr)
+  }
+
+  private func lookUpVariable(_ name: String, _ expr: Expr) throws -> Any? {
+    if let depth = locals[expr] {
+      return try self.environment.get(name, at: depth)
+    }
+    else {
+      return try self.globals.get(name)
+    }
   }
 
   func visitAssignExpr(_ expr: AssignExpr) throws -> Any? {
     let value = try self.evaluate(expr.value)
-    try self.environment.assign(expr.name, value)
+
+    if let depth = self.locals[expr] {
+      try self.environment.assign(expr.name, value, at: depth)
+    }
+    else {
+      try self.globals.assign(expr.name, value)
+    }
+
     return value
   }
 

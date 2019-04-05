@@ -11,13 +11,15 @@ class Interpreter: InterpreterType {
   typealias StmtResult = Void
   typealias ExprResult = Any?
 
-  private let globals: Environment = {
+  lazy var environment = self.globals
+
+  let globals: Environment = {
     let result = Environment()
     result.define("clock", ClockCallable())
     return result
   }()
 
-  lazy var environment = self.globals
+  var locals = [Expr:Int]()
 
   func interpret(_ statements: [Stmt]) {
     do {
@@ -61,6 +63,12 @@ class Interpreter: InterpreterType {
   func isTruthy(_ value: Any?) -> Bool {
     guard let value = value else { return false }
     return (value as? Bool) ?? true
+  }
+
+  // MARK: - Resolve
+
+  func resolve(_ expr: Expr, _ depth: Int) {
+    self.locals[expr] = depth
   }
 
   // MARK: - Errors

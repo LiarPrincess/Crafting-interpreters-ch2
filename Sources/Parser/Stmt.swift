@@ -48,76 +48,125 @@ extension StmtVisitor {
   }
 }
 
-protocol Stmt {
-  func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult
-}
-
-struct PrintStmt: Stmt {
-  let expr: Expr
+class Stmt: Equatable, Hashable {
 
   func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
+    fatalError("Accept metod should be overriden in subclass")
+  }
+
+  static func == (lhs: Stmt, rhs: Stmt) -> Bool {
+    return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+  }
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(ObjectIdentifier(self).hashValue)
+  }
+}
+
+class PrintStmt: Stmt {
+  let expr: Expr
+
+  init(expr: Expr) {
+    self.expr = expr
+  }
+
+  override func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
     return try visitor.visitPrintStmt(self)
   }
 }
 
-struct ExpressionStmt: Stmt {
+class ExpressionStmt: Stmt {
   let expr: Expr
 
-  func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
+  init(expr: Expr) {
+    self.expr = expr
+  }
+
+  override func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
     return try visitor.visitExpressionStmt(self)
   }
 }
 
-struct VarStmt: Stmt {
+class VarStmt: Stmt {
   let name: String
   let initializer: Expr?
 
-  func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
+  init(name: String, initializer: Expr?) {
+    self.name = name
+    self.initializer = initializer
+  }
+
+  override func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
     return try visitor.visitVarStmt(self)
   }
 }
 
-struct BlockStmt: Stmt {
+class BlockStmt: Stmt {
   let statements: [Stmt]
 
-  func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
+  init(statements: [Stmt]) {
+    self.statements = statements
+  }
+
+  override func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
     return try visitor.visitBlockStmt(self)
   }
 }
 
-struct IfStmt: Stmt {
+class IfStmt: Stmt {
   let condition: Expr
   let thenBranch: Stmt
   let elseBranch: Stmt?
 
-  func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
+  init(condition: Expr, thenBranch: Stmt, elseBranch: Stmt?) {
+    self.condition = condition
+    self.thenBranch = thenBranch
+    self.elseBranch = elseBranch
+  }
+
+  override func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
     return try visitor.visitIfStmt(self)
   }
 }
 
-struct WhileStmt: Stmt {
+class WhileStmt: Stmt {
   let condition: Expr
   let body: Stmt
 
-  func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
+  init(condition: Expr, body: Stmt) {
+    self.condition = condition
+    self.body = body
+  }
+
+  override func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
     return try visitor.visitWhileStmt(self)
   }
 }
 
-struct FunctionStmt: Stmt {
+class FunctionStmt: Stmt {
   let name: String
   let parameters: [String]
-  let body: Stmt
+  let body: [Stmt]
 
-  func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
+  init(name: String, parameters: [String], body: [Stmt]) {
+    self.name = name
+    self.parameters = parameters
+    self.body = body
+  }
+
+  override func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
     return try visitor.visitFunctionStmt(self)
   }
 }
 
-struct ReturnStmt: Stmt {
+class ReturnStmt: Stmt {
   let value: Expr?
 
-  func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
+  init(value: Expr?) {
+    self.value = value
+  }
+
+  override func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
     return try visitor.visitReturnStmt(self)
   }
 }
+

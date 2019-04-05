@@ -1,3 +1,4 @@
+print "> Should print: false";
 if (true and false) {
   var a = "global a";
   var b = "global b";
@@ -23,60 +24,52 @@ else {
   print "false";
 }
 
-//print "one";
-//print true; // comment
-//print 2 + 1;
-//print (1+(2-4))*3;
+print "> Should print: one, true, 3, -3";
+print "one";
+print true; // comment
+print 2 + 1;
+print (1+(2-4))*3;
 
+print "> Should print: 5";
 var a = 1;
 var b = 2;
 b = 4;
 print a + b;
 
+print "> Should print: 1";
 var a = 1;
 {
-  var a = a + 2;
+  //var a = a + 2;
   print a;
 }
 
-print "While loop:";
-var loopControl = 5;
+print "> While loop - should print: loop -> 3, 2, 1";
+var loopControl = 3;
 while (loopControl > 0) {
   print "loop: " + loopControl;
   loopControl = loopControl - 1;
 }
 
-print "Fibonacci - for loop";
-var a = 0;
-var b = 1;
-
-while (a < 100) {
-  print a;
-  var temp = a;
-  a = b;
-  b = temp + b;
-}
-
-print "time";
+print "> Time - should print double";
 print clock();
 
-print "testFun";
+print "> Function - should print: 'Inside function 5foo'";
 fun testFun(param1, param2) {
   print "Inside function: " + param1 + param2;
 }
 testFun(5, "foo");
 
-print "Fibonacci - rec";
+print "> Fibonacci rec - should print: 0, 1, 1, 2, 3, 5, 8";
 fun fibonacci(n) {
   if (n <= 1) return n;
   return fibonacci(n - 2) + fibonacci(n - 1);
 }
 
-for (var i = 0; i < 10; i = i + 1) {
+for (var i = 0; i < 7; i = i + 1) {
   print fibonacci(i);
 }
 
-print "=== Test ===";
+print "> Counter closure - should print: 1, 2";
 fun makeCounter() {
   var i = 0;
   fun count() {
@@ -89,3 +82,9 @@ fun makeCounter() {
 var counter = makeCounter();
 counter(); // "1".
 counter(); // "2".
+
+print "> Testing scopes - uncomment to get error";
+var a = "outer";
+{
+  // var a = a;
+}

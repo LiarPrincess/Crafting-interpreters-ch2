@@ -51,7 +51,7 @@ class AstPrinter: StmtVisitor, ExprVisitor {
 
   func visitFunctionStmt(_ stmt: FunctionStmt) throws -> String {
     let name = self.parenthesize(name: "name", childs: [stmt.name])
-    let body = try self.parenthesize(name: "body", stmts: [stmt.body])
+    let body = try self.parenthesize(name: "body", stmts: stmt.body)
     return self.parenthesize(name: "fun", childs: [name, body])
   }
 

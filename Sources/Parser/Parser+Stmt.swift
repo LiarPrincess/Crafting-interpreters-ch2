@@ -10,7 +10,7 @@ extension Parser {
     }
 
     if self.match(.leftBrace) {
-      return try self.blockStatement()
+      return BlockStmt(statements: try self.blockStatements())
     }
 
     if self.match(.if) {
@@ -38,7 +38,7 @@ extension Parser {
     return PrintStmt(expr: expr)
   }
 
-  func blockStatement() throws -> Stmt {
+  func blockStatements() throws -> [Stmt] {
     var statements = [Stmt]()
 
     while !self.check(.rightBrace), !self.isAtEnd {
@@ -48,7 +48,7 @@ extension Parser {
     }
 
     try self.consumeOrThrow(type: .rightBrace, error: .missingToken("'}'"))
-    return BlockStmt(statements: statements)
+    return statements
   }
 
   func ifStatement() throws -> Stmt {

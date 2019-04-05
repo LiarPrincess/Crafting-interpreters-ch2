@@ -4,9 +4,6 @@
 
 import Foundation
 
-//defineExpr()
-//defineStmt()
-
 debug = false
 
 let args = CommandLine.arguments.dropFirst()

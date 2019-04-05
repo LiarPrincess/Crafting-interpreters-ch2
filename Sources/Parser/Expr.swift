@@ -60,100 +60,158 @@ extension ExprVisitor {
   }
 }
 
-protocol Expr {
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult
-}
-
-struct BoolExpr: Expr {
-  let value: Bool
+class Expr: Equatable, Hashable {
 
   func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+    fatalError("Accept metod should be overriden in subclass")
+  }
+
+  static func == (lhs: Expr, rhs: Expr) -> Bool {
+    return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+  }
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(ObjectIdentifier(self).hashValue)
+  }
+}
+
+class BoolExpr: Expr {
+  let value: Bool
+
+  init(value: Bool) {
+    self.value = value
+  }
+
+  override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitBoolExpr(self)
   }
 }
 
-struct NumberExpr: Expr {
+class NumberExpr: Expr {
   let value: Double
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+  init(value: Double) {
+    self.value = value
+  }
+
+  override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitNumberExpr(self)
   }
 }
 
-struct StringExpr: Expr {
+class StringExpr: Expr {
   let value: String
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+  init(value: String) {
+    self.value = value
+  }
+
+  override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitStringExpr(self)
   }
 }
 
-struct NilExpr: Expr {
+class NilExpr: Expr {
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+  override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitNilExpr(self)
   }
 }
 
-struct UnaryExpr: Expr {
+class UnaryExpr: Expr {
   let op: Operator
   let right: Expr
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+  init(op: Operator, right: Expr) {
+    self.op = op
+    self.right = right
+  }
+
+  override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitUnaryExpr(self)
   }
 }
 
-struct BinaryExpr: Expr {
+class BinaryExpr: Expr {
   let op: Operator
   let left: Expr
   let right: Expr
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+  init(op: Operator, left: Expr, right: Expr) {
+    self.op = op
+    self.left = left
+    self.right = right
+  }
+
+  override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitBinaryExpr(self)
   }
 }
 
-struct LogicalExpr: Expr {
+class LogicalExpr: Expr {
   let op: Operator
   let left: Expr
   let right: Expr
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+  init(op: Operator, left: Expr, right: Expr) {
+    self.op = op
+    self.left = left
+    self.right = right
+  }
+
+  override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitLogicalExpr(self)
   }
 }
 
-struct GroupingExpr: Expr {
+class GroupingExpr: Expr {
   let expr: Expr
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+  init(expr: Expr) {
+    self.expr = expr
+  }
+
+  override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitGroupingExpr(self)
   }
 }
 
-struct VariableExpr: Expr {
+class VariableExpr: Expr {
   let name: String
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+  init(name: String) {
+    self.name = name
+  }
+
+  override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitVariableExpr(self)
   }
 }
 
-struct AssignExpr: Expr {
+class AssignExpr: Expr {
   let name: String
   let value: Expr
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+  init(name: String, value: Expr) {
+    self.name = name
+    self.value = value
+  }
+
+  override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitAssignExpr(self)
   }
 }
 
-struct CallExpr: Expr {
+class CallExpr: Expr {
   let calee: Expr
   let arguments: [Expr]
 
-  func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+  init(calee: Expr, arguments: [Expr]) {
+    self.calee = calee
+    self.arguments = arguments
+  }
+
+  override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitCallExpr(self)
   }
 }
+
