@@ -3,10 +3,13 @@
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
 enum ResolverErrors: Error, CustomStringConvertible {
+  case variableAlreadyDeclared(name: String)
   case variableSelfReferenceInInit(name: String)
 
   var description: String {
     switch self {
+    case let .variableAlreadyDeclared(name):
+      return "Variable '\(name)' was already declared in this scope."
     case let .variableSelfReferenceInInit(name):
       return "Cannot read variable '\(name)' in its own initializer."
     }
@@ -41,7 +44,7 @@ class Resolver: StmtVisitor, ExprVisitor {
   }
 
   func visitVarStmt(_ stmt: VarStmt) throws {
-    self.declare(stmt.name)
+    try self.declare(stmt.name)
     if let initializer = stmt.initializer  {
       try self.resolve(initializer)
     }
@@ -68,7 +71,7 @@ class Resolver: StmtVisitor, ExprVisitor {
   }
 
   func visitFunctionStmt(_ stmt: FunctionStmt) throws {
-    self.declare(stmt.name)
+    try self.declare(stmt.name)
     self.define(stmt.name)
 
     try self.resolveFunction(stmt)
@@ -149,7 +152,7 @@ class Resolver: StmtVisitor, ExprVisitor {
     self.beginScope()
 
     for param in stmt.parameters {
-      self.declare(param)
+      try self.declare(param)
       self.define(param)
     }
 
@@ -167,10 +170,14 @@ class Resolver: StmtVisitor, ExprVisitor {
     self.scopes.removeLast()
   }
 
-  private func declare(_ name: String) {
+  private func declare(_ name: String) throws {
     guard !self.scopes.isEmpty else { return }
 
     let lastIndex = self.scopes.count - 1
+    if self.scopes[lastIndex].contains(name) {
+      throw ResolverErrors.variableAlreadyDeclared(name: name)
+    }
+
     self.scopes[lastIndex][name] = .declared
   }
 

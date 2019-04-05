@@ -72,6 +72,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		907D6FC22257DB96001199D4 /* main.lox */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.lox; sourceTree = "<group>"; };
 		"Lox::Code generator::Product" /* Code generator */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Code generator"; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Lox::Lox::Product" /* Lox */ = {isa = PBXFileReference; lastKnownFileType = text; path = Lox; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Lox::LoxTests::Product" /* LoxTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = LoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -225,6 +226,7 @@
 		OBJ_5 /*  */ = {
 			isa = PBXGroup;
 			children = (
+				907D6FC22257DB96001199D4 /* main.lox */,
 				OBJ_6 /* Package.swift */,
 				OBJ_7 /* Sources */,
 				OBJ_42 /* Tests */,

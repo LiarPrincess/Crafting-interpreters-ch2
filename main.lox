@@ -88,3 +88,9 @@ var a = "outer";
 {
   // var a = a;
 }
+
+print "> Testing double declaration - uncomment to get error";
+fun bad() {
+  var a = "first";
+  // var a = "second";
+}
