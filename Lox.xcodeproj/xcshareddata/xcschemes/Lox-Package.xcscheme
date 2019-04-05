@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Lox::Code generator"
-               BuildableName = "Code generator"
-               BlueprintName = "Code generator"
+               BlueprintIdentifier = "Lox::Lox"
+               BuildableName = "Lox"
+               BlueprintName = "Lox"
                ReferencedContainer = "container:Lox.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,9 +28,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Lox::Lox"
-               BuildableName = "Lox"
-               BlueprintName = "Lox"
+               BlueprintIdentifier = "Lox::Code generator"
+               BuildableName = "Code generator"
+               BlueprintName = "Code generator"
                ReferencedContainer = "container:Lox.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -69,9 +69,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "Lox::Code generator"
-            BuildableName = "Code generator"
-            BlueprintName = "Code generator"
+            BlueprintIdentifier = "Lox::Lox"
+            BuildableName = "Lox"
+            BlueprintName = "Lox"
             ReferencedContainer = "container:Lox.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

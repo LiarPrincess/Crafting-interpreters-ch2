@@ -229,8 +229,8 @@ let parserDir = sourcesDir.appendingPathComponent("Lox").appendingPathComponent(
 let exprFile = parserDir.appendingPathComponent("Expr.swift")
 let stmtFile = parserDir.appendingPathComponent("Stmt.swift")
 
-//print("Writing expr to: '\(exprFile)'")
-//print("Writing stmt to: '\(stmtFile)'")
-//
-//writeExpr(to: exprFile.path)
-//writeStmt(to: stmtFile.path)
+print("Writing expr to: '\(exprFile)'")
+print("Writing stmt to: '\(stmtFile)'")
+
+writeExpr(to: exprFile.path)
+writeStmt(to: stmtFile.path)
