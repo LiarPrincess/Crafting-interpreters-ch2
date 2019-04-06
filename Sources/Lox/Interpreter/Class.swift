@@ -25,10 +25,21 @@ class Class: CustomStringConvertible {
 
 extension Class: Callable {
 
-  var arity: Int { return 0 }
+  private var initializer: Function? {
+    return self.findMethod("init")
+  }
+
+  var arity: Int {
+    return self.initializer?.arity ?? 0
+  }
 
   func call(_ interpreter: Interpreter, _ arguments: [Any?]) throws -> Any? {
     let instance = Instance(class: self)
+
+    if let initializer = self.initializer {
+      try initializer.bind(instance).call(interpreter, arguments)
+    }
+
     return instance
   }
 }

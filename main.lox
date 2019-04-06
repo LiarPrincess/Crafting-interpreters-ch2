@@ -24,18 +24,21 @@ else {
   print "false";
 }
 
+print "";
 print "> Should print: one, true, 3, -3";
 print "one";
 print true; // comment
 print 2 + 1;
 print (1+(2-4))*3;
 
+print "";
 print "> Should print: 5";
 var a = 1;
 var b = 2;
 b = 4;
 print a + b;
 
+print "";
 print "> Should print: 1";
 var a = 1;
 {
@@ -43,6 +46,7 @@ var a = 1;
   print a;
 }
 
+print "";
 print "> While loop - should print: loop -> 3, 2, 1";
 var loopControl = 3;
 while (loopControl > 0) {
@@ -50,15 +54,18 @@ while (loopControl > 0) {
   loopControl = loopControl - 1;
 }
 
+print "";
 print "> Time - should print double";
 print clock();
 
+print "";
 print "> Function - should print: 'Inside function 5foo'";
 fun testFun(param1, param2) {
   print "Inside function: " + param1 + param2;
 }
 testFun(5, "foo");
 
+print "";
 print "> Fibonacci rec - should print: 0, 1, 1, 2, 3, 5, 8";
 fun fibonacci(n) {
   if (n <= 1) return n;
@@ -69,6 +76,7 @@ for (var i = 0; i < 7; i = i + 1) {
   print fibonacci(i);
 }
 
+print "";
 print "> Counter closure - should print: 1, 2";
 fun makeCounter() {
   var i = 0;
@@ -83,6 +91,7 @@ var counter = makeCounter();
 counter(); // "1".
 counter(); // "2".
 
+print "";
 print "> Testing scopes - uncomment to get error";
 var a = "outer";
 {
@@ -98,10 +107,12 @@ fun bad() {
 print "> Testing top-level return - uncomment to get error";
 // return 5;
 
+print "> Testing unused variable";
 {
   var unusedVariable = "5";
 }
 
+print "";
 print "> Class properites - should print: eggs";
 class Breakfast {
   cook() {
@@ -120,6 +131,7 @@ b.name = "eggs";
 print b;
 print b.name;
 
+print "";
 print "> Class methods - should print: Crunch crunch crunch!";
 class Bacon {
   eat() {
@@ -130,6 +142,7 @@ class Bacon {
 var bacon = Bacon();
 bacon.eat(); // Prints "Crunch crunch crunch!".
 
+print "";
 print "> Class this - should print: Instance";
 
 class Egotist {
@@ -141,5 +154,22 @@ class Egotist {
 var method = Egotist().speak;
 method();
 
+print "";
 print "> Testing 'this' outside of class - uncomment to get error";
 // var a = this;
+
+print "";
+print "> Class init - should print: value-5";
+
+class Egotist {
+
+  init(value) {
+    this.value = value;
+  }
+
+  speak() {
+    print this.value;
+  }
+}
+
+Egotist("value-5").speak();

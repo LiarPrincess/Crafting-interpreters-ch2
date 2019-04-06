@@ -15,10 +15,6 @@ extension Interpreter {
       return "nil"
     }
 
-    if let value = value as? String {
-      return "\"\(value)\""
-    }
-
     return String(describing: value)
   }
 
