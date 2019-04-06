@@ -163,6 +163,10 @@ extension Parser {
       return GroupingExpr(expr: expr)
     }
 
+    if self.match(.this) {
+      return ThisExpr()
+    }
+
     throw self.error(token: current, error: .expectedExpression)
   }
 }

@@ -2,7 +2,7 @@
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-class Instance {
+class Instance: CustomStringConvertible {
 
   let `class`: Class
   private var fields = [String:Any?]()
@@ -16,8 +16,8 @@ class Instance {
       return value
     }
 
-    if let method = self.class.methods[name] {
-      return method
+    if let method = self.class.findMethod(name) {
+      return method.bind(self)
     }
 
     throw RuntimeError.getUndefinedPropery(name: name)
@@ -25,5 +25,9 @@ class Instance {
 
   func set(_ name: String, to value: Any?) {
     self.fields[name] = value
+  }
+
+  var description: String {
+    return "\(self.class)(\(self.fields))"
   }
 }

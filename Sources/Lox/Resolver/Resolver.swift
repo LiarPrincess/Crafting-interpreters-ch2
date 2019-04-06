@@ -51,8 +51,10 @@ class Resolver: StmtVisitor, ExprVisitor {
 
   // MARK: - Scope
 
-  func beginScope() {
-    self.scopes.append(ScopeInfo())
+  func beginScope() -> ScopeInfo {
+    let scope = ScopeInfo()
+    self.scopes.append(scope)
+    return scope
   }
 
   func endScope() {

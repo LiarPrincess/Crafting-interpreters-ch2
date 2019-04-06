@@ -3,8 +3,9 @@
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
 // swiftlint:disable superfluous_disable_command
-// swiftlint:disable file_length
 // swiftlint:disable trailing_newline
+// swiftlint:disable file_length
+// swiftlint:disable function_body_length
 // swiftlint:disable cyclomatic_complexity
 
 protocol ExprVisitor {
@@ -36,6 +37,8 @@ protocol ExprVisitor {
   func visitGetExpr(_ expr: GetExpr) throws -> ExprResult
   @discardableResult
   func visitSetExpr(_ expr: SetExpr) throws -> ExprResult
+  @discardableResult
+  func visitThisExpr(_ expr: ThisExpr) throws -> ExprResult
 }
 
 extension ExprVisitor {
@@ -67,6 +70,8 @@ extension ExprVisitor {
       return try self.visitGetExpr(expr)
     case let expr as SetExpr:
       return try self.visitSetExpr(expr)
+    case let expr as ThisExpr:
+      return try self.visitThisExpr(expr)
     default:
       fatalError("Unknown expr \(expr)")
     }
@@ -255,6 +260,13 @@ class SetExpr: Expr {
 
   override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitSetExpr(self)
+  }
+}
+
+class ThisExpr: Expr {
+
+  override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+    return try visitor.visitThisExpr(self)
   }
 }
 

@@ -61,4 +61,9 @@ extension Resolver {
     try self.resolve(expr.object)
     try self.resolve(expr.value)
   }
+
+  func visitThisExpr(_ expr: ThisExpr) throws {
+    // TODO: Better
+    self.resolveLocal(expr, TokenType.this.description)
+  }
 }

@@ -23,6 +23,11 @@ extension Resolver {
     try self.declare(stmt.name)
     self.define(stmt.name)
 
+    let scope = self.beginScope()
+    defer { self.endScope() }
+
+    scope.variables["this"] = VariableInfo(state: .initialized)
+
     for method in stmt.methods {
       let type = FunctionType.method
       try self.resolveFunction(method, type: type)

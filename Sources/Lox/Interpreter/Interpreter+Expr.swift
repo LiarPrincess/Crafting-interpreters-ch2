@@ -152,6 +152,10 @@ extension Interpreter {
 
     throw RuntimeError.setProperyOfNonObject
   }
+
+  func visitThisExpr(_ expr: ThisExpr) throws -> Any? {
+    return try self.lookUpVariable("this", expr)
+  }
 }
 
 // MARK: - Binary operations

@@ -31,4 +31,10 @@ class Function: Callable {
 
     return nil
   }
+
+  func bind(_ instance: Instance) -> Function {
+    let environment = Environment(parent: self.closure)
+    environment.define("this", instance)
+    return Function(declaration: self.declaration, closure: environment)
+  }
 }
