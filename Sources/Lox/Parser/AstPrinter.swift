@@ -117,6 +117,11 @@ class AstPrinter: StmtVisitor, ExprVisitor {
     return self.parenthesize(name: "call", childs: [calee, args])
   }
 
+  func visitGetExpr(_ expr: GetExpr) throws -> String {
+    let object = try self.visit(expr.object)
+    return self.parenthesize(name: "get", childs: [expr.name, object])
+  }
+
   // MARK: - Parenthesize
 
   private func parenthesize(name: String, childs: [String]) -> String {

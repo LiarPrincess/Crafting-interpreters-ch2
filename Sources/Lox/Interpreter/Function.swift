@@ -2,13 +2,18 @@
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-struct Function: Callable {
+class Function: Callable {
 
   let declaration: FunctionStmt
   let closure: Environment
 
   var arity: Int {
     return self.declaration.parameters.count
+  }
+
+  init(declaration: FunctionStmt, closure: Environment) {
+    self.declaration = declaration
+    self.closure = closure
   }
 
   func call(_ interpreter: Interpreter, _ arguments: [Any?]) throws -> Any? {

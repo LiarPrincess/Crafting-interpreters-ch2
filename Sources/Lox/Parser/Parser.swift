@@ -63,6 +63,7 @@ class Parser: ParserType {
 
     return self.peek.type == type
   }
+
   /// Consume current token if it is @param otherwise throw @error
   func consumeOrThrow(type: TokenType, error: ParseError) throws {
     if self.check(type) {
@@ -71,6 +72,16 @@ class Parser: ParserType {
     }
 
     throw self.error(token: self.peek, error: error)
+  }
+
+  /// Consume current token if it is identifier otherwise throw .expectedIdentifier
+  func consumeIdentifierOrThrow() throws -> String {
+    if case let TokenType.identifier(name) = self.peek.type {
+      self.advance()
+      return name
+    }
+
+    throw self.error(token: self.peek, error: .expectedIdentifier)
   }
 
   /// Consume if current token is in @param

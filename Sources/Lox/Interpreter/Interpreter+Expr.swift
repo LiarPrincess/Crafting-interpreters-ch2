@@ -132,6 +132,15 @@ extension Interpreter {
 
     return try function.call(self, arguments)
   }
+
+  func visitGetExpr(_ expr: GetExpr) throws -> Any? {
+    let object = try self.evaluate(expr.object)
+    if let instance = object as? Instance {
+      return try instance.get(expr.name)
+    }
+
+    throw RuntimeError.getProperyOfNonObject
+  }
 }
 
 // MARK: - Binary operations

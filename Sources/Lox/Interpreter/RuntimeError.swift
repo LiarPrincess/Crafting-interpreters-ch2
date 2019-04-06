@@ -9,6 +9,8 @@ enum RuntimeError: Error, CustomStringConvertible {
   case invalidOperandTypes(op: String, leftType: String, rightType: String)
   case notCallable(type: String)
   case invalidArgumentCount(expected: Int, actuall: Int)
+  case getProperyOfNonObject
+  case getUndefinedPropery(name: String)
 
   var description: String {
     switch self {
@@ -24,6 +26,10 @@ enum RuntimeError: Error, CustomStringConvertible {
       return "Object of type '\(typ)' is not callable."
     case let .invalidArgumentCount(expected, actuall):
       return "Invalid argument count, expected: \(expected), got: \(actuall)."
+    case .getProperyOfNonObject:
+      return "Only instances have properties."
+    case let .getUndefinedPropery(name):
+      return "Undefined property '\(name)'."
     }
   }
 }

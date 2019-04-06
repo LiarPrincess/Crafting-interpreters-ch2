@@ -27,6 +27,10 @@
 		907D6FCE2258B50E001199D4 /* Interpreter+Decl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907D6FCC2258B501001199D4 /* Interpreter+Decl.swift */; };
 		907D6FD12258B6D2001199D4 /* Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907D6FCF2258B64F001199D4 /* Class.swift */; };
 		907D6FD42258B70E001199D4 /* Function.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907D6FD22258B70B001199D4 /* Function.swift */; };
+		907D6FD72258C49A001199D4 /* Resolver+Decl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907D6FD52258C495001199D4 /* Resolver+Decl.swift */; };
+		907D6FD92258C530001199D4 /* Resolver+Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907D6FD82258C530001199D4 /* Resolver+Expr.swift */; };
+		907D6FDB2258C555001199D4 /* Resolver+Stmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907D6FDA2258C555001199D4 /* Resolver+Stmt.swift */; };
+		907D6FDD2258C582001199D4 /* ResolverError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907D6FDC2258C582001199D4 /* ResolverError.swift */; };
 		OBJ_108 /* LoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_43 /* LoxTests.swift */; };
 		OBJ_109 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_44 /* XCTestManifests.swift */; };
 		OBJ_57 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* main.swift */; };
@@ -85,6 +89,10 @@
 		907D6FCC2258B501001199D4 /* Interpreter+Decl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Interpreter+Decl.swift"; sourceTree = "<group>"; };
 		907D6FCF2258B64F001199D4 /* Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Class.swift; sourceTree = "<group>"; };
 		907D6FD22258B70B001199D4 /* Function.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Function.swift; sourceTree = "<group>"; };
+		907D6FD52258C495001199D4 /* Resolver+Decl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Resolver+Decl.swift"; sourceTree = "<group>"; };
+		907D6FD82258C530001199D4 /* Resolver+Expr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Resolver+Expr.swift"; sourceTree = "<group>"; };
+		907D6FDA2258C555001199D4 /* Resolver+Stmt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Resolver+Stmt.swift"; sourceTree = "<group>"; };
+		907D6FDC2258C582001199D4 /* ResolverError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResolverError.swift; sourceTree = "<group>"; };
 		"Lox::Code generator::Product" /* Code generator */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Code generator"; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Lox::Lox::Product" /* Lox */ = {isa = PBXFileReference; lastKnownFileType = text; path = Lox; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Lox::LoxTests::Product" /* LoxTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = LoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,6 +162,10 @@
 			children = (
 				907D6FC42257E381001199D4 /* ScopeInfo.swift */,
 				OBJ_19 /* Resolver.swift */,
+				907D6FD52258C495001199D4 /* Resolver+Decl.swift */,
+				907D6FDA2258C555001199D4 /* Resolver+Stmt.swift */,
+				907D6FD82258C530001199D4 /* Resolver+Expr.swift */,
+				907D6FDC2258C582001199D4 /* ResolverError.swift */,
 			);
 			path = Resolver;
 			sourceTree = "<group>";
@@ -446,12 +458,15 @@
 				OBJ_64 /* Dictionary+Contains.swift in Sources */,
 				907D6FCE2258B50E001199D4 /* Interpreter+Decl.swift in Sources */,
 				OBJ_65 /* Callable.swift in Sources */,
+				907D6FD72258C49A001199D4 /* Resolver+Decl.swift in Sources */,
 				OBJ_66 /* Environment.swift in Sources */,
 				OBJ_67 /* Interpreter+Expr.swift in Sources */,
 				OBJ_68 /* Interpreter+Stmt.swift in Sources */,
 				OBJ_69 /* Interpreter.swift in Sources */,
 				OBJ_70 /* Resolver.swift in Sources */,
+				907D6FDB2258C555001199D4 /* Resolver+Stmt.swift in Sources */,
 				OBJ_71 /* RuntimeError.swift in Sources */,
+				907D6FDD2258C582001199D4 /* ResolverError.swift in Sources */,
 				OBJ_72 /* Lox.swift in Sources */,
 				OBJ_73 /* AstPrinter.swift in Sources */,
 				OBJ_74 /* Expr.swift in Sources */,
@@ -463,6 +478,7 @@
 				OBJ_78 /* Parser+Stmt.swift in Sources */,
 				OBJ_79 /* Parser.swift in Sources */,
 				907D6FD12258B6D2001199D4 /* Class.swift in Sources */,
+				907D6FD92258C530001199D4 /* Resolver+Expr.swift in Sources */,
 				OBJ_80 /* ParserError.swift in Sources */,
 				OBJ_81 /* Stmt.swift in Sources */,
 				OBJ_82 /* Scanner.swift in Sources */,

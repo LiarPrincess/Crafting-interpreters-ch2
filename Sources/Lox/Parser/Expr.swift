@@ -31,6 +31,8 @@ protocol ExprVisitor {
   func visitAssignExpr(_ expr: AssignExpr) throws -> ExprResult
   @discardableResult
   func visitCallExpr(_ expr: CallExpr) throws -> ExprResult
+  @discardableResult
+  func visitGetExpr(_ expr: GetExpr) throws -> ExprResult
 }
 
 extension ExprVisitor {
@@ -58,6 +60,8 @@ extension ExprVisitor {
       return try self.visitAssignExpr(expr)
     case let expr as CallExpr:
       return try self.visitCallExpr(expr)
+    case let expr as GetExpr:
+      return try self.visitGetExpr(expr)
     default:
       fatalError("Unknown expr \(expr)")
     }
@@ -216,6 +220,20 @@ class CallExpr: Expr {
 
   override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitCallExpr(self)
+  }
+}
+
+class GetExpr: Expr {
+  let object: Expr
+  let name: String
+
+  init(object: Expr, name: String) {
+    self.object = object
+    self.name = name
+  }
+
+  override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+    return try visitor.visitGetExpr(self)
   }
 }
 

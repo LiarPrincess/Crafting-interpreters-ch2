@@ -73,14 +73,4 @@ extension Parser {
     try self.consumeOrThrow(type: .rightBrace, error: .missingToken("'}'"))
     return ClassStmt(name: name, methods: methods)
   }
-
-  /// Consume current token if it is identifier otherwise throw .expectedIdentifier
-  private func consumeIdentifierOrThrow() throws -> String {
-    if case let TokenType.identifier(name) = self.peek.type {
-      self.advance()
-      return name
-    }
-
-    throw self.error(token: self.peek, error: .expectedIdentifier)
-  }
 }

@@ -106,6 +106,10 @@ extension Parser {
       if self.match(.leftParen) {
         expr = try self.finishCall(expr)
       }
+      else if self.match(.dot) {
+        let property = try self.consumeIdentifierOrThrow()
+        expr = GetExpr(object: expr, name: property)
+      }
       else { break }
     }
     return expr
