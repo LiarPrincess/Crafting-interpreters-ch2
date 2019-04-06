@@ -6,14 +6,16 @@ class Function: Callable {
 
   let declaration: FunctionStmt
   let closure: Environment
+  let isInitializer: Bool
 
   var arity: Int {
     return self.declaration.parameters.count
   }
 
-  init(declaration: FunctionStmt, closure: Environment) {
+  init(declaration: FunctionStmt, closure: Environment, isInitializer: Bool = false) {
     self.declaration = declaration
     self.closure = closure
+    self.isInitializer = isInitializer
   }
 
   func call(_ interpreter: Interpreter, _ arguments: [Any?]) throws -> Any? {
@@ -29,12 +31,16 @@ class Function: Callable {
       return error.value
     }
 
+    if self.isInitializer {
+      return try self.closure.get("this", at: 0)
+    }
+
     return nil
   }
 
   func bind(_ instance: Instance) -> Function {
     let environment = Environment(parent: self.closure)
     environment.define("this", instance)
-    return Function(declaration: self.declaration, closure: environment)
+    return Function(declaration: self.declaration, closure: environment, isInitializer: self.isInitializer)
   }
 }

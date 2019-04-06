@@ -23,7 +23,8 @@ extension Interpreter {
 
     var methods = [String:Function]()
     for method in stmt.methods {
-      let function = Function(declaration: method, closure: self.environment)
+      let isInitializer = stmt.name == "init"
+      let function = Function(declaration: method, closure: self.environment, isInitializer: isInitializer)
       methods[method.name] = function
     }
 
