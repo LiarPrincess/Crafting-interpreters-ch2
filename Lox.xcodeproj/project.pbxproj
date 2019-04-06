@@ -31,6 +31,7 @@
 		907D6FD92258C530001199D4 /* Resolver+Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907D6FD82258C530001199D4 /* Resolver+Expr.swift */; };
 		907D6FDB2258C555001199D4 /* Resolver+Stmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907D6FDA2258C555001199D4 /* Resolver+Stmt.swift */; };
 		907D6FDD2258C582001199D4 /* ResolverError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907D6FDC2258C582001199D4 /* ResolverError.swift */; };
+		907D6FDF2258D0BD001199D4 /* Instance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907D6FDE2258D0BD001199D4 /* Instance.swift */; };
 		OBJ_108 /* LoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_43 /* LoxTests.swift */; };
 		OBJ_109 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_44 /* XCTestManifests.swift */; };
 		OBJ_57 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* main.swift */; };
@@ -93,6 +94,7 @@
 		907D6FD82258C530001199D4 /* Resolver+Expr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Resolver+Expr.swift"; sourceTree = "<group>"; };
 		907D6FDA2258C555001199D4 /* Resolver+Stmt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Resolver+Stmt.swift"; sourceTree = "<group>"; };
 		907D6FDC2258C582001199D4 /* ResolverError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResolverError.swift; sourceTree = "<group>"; };
+		907D6FDE2258D0BD001199D4 /* Instance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Instance.swift; sourceTree = "<group>"; };
 		"Lox::Code generator::Product" /* Code generator */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Code generator"; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Lox::Lox::Product" /* Lox */ = {isa = PBXFileReference; lastKnownFileType = text; path = Lox; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Lox::LoxTests::Product" /* LoxTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = LoxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -198,6 +200,7 @@
 			isa = PBXGroup;
 			children = (
 				907D6FCF2258B64F001199D4 /* Class.swift */,
+				907D6FDE2258D0BD001199D4 /* Instance.swift */,
 				OBJ_14 /* Callable.swift */,
 				907D6FD22258B70B001199D4 /* Function.swift */,
 				OBJ_15 /* Environment.swift */,
@@ -477,6 +480,7 @@
 				OBJ_77 /* Parser+Expr.swift in Sources */,
 				OBJ_78 /* Parser+Stmt.swift in Sources */,
 				OBJ_79 /* Parser.swift in Sources */,
+				907D6FDF2258D0BD001199D4 /* Instance.swift in Sources */,
 				907D6FD12258B6D2001199D4 /* Class.swift in Sources */,
 				907D6FD92258C530001199D4 /* Resolver+Expr.swift in Sources */,
 				OBJ_80 /* ParserError.swift in Sources */,

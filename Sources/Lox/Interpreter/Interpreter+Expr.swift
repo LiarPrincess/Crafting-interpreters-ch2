@@ -141,6 +141,17 @@ extension Interpreter {
 
     throw RuntimeError.getProperyOfNonObject
   }
+
+  func visitSetExpr(_ expr: SetExpr) throws -> Any? {
+    let object = try self.evaluate(expr.object)
+    if let instance = object as? Instance {
+      let value = try self.evaluate(expr.value)
+      instance.set(expr.name, to: value)
+      return value
+    }
+
+    throw RuntimeError.setProperyOfNonObject
+  }
 }
 
 // MARK: - Binary operations

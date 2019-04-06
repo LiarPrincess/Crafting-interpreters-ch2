@@ -56,4 +56,9 @@ extension Resolver {
   func visitGetExpr(_ expr: GetExpr) throws {
     try self.resolve(expr.object)
   }
+
+  func visitSetExpr(_ expr: SetExpr) throws {
+    try self.resolve(expr.object)
+    try self.resolve(expr.value)
+  }
 }

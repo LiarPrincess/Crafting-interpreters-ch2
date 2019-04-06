@@ -16,8 +16,11 @@ extension Parser {
       let value = try self.assignment()
 
       if let expr = expr as? VariableExpr {
-        let name = expr.name
-        return AssignExpr(name: name, value: value)
+        return AssignExpr(name: expr.name, value: value)
+      }
+
+      if let expr = expr as? GetExpr {
+        return SetExpr(object: expr.object, name: expr.name, value: value)
       }
 
       self.error(token: equals, error: .invalidAssignment)

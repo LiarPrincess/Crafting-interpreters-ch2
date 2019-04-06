@@ -11,6 +11,7 @@ enum RuntimeError: Error, CustomStringConvertible {
   case invalidArgumentCount(expected: Int, actuall: Int)
   case getProperyOfNonObject
   case getUndefinedPropery(name: String)
+  case setProperyOfNonObject
 
   var description: String {
     switch self {
@@ -30,6 +31,8 @@ enum RuntimeError: Error, CustomStringConvertible {
       return "Only instances have properties."
     case let .getUndefinedPropery(name):
       return "Undefined property '\(name)'."
+    case .setProperyOfNonObject:
+      return "Only instances have fields."
     }
   }
 }

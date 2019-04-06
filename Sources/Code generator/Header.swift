@@ -11,6 +11,7 @@ func printLicense() {
 
 func printSwiftLintDisable() {
   print("// swiftlint:disable superfluous_disable_command")
+  print("// swiftlint:disable file_length")
   print("// swiftlint:disable trailing_newline")
   print("// swiftlint:disable cyclomatic_complexity")
   print("")

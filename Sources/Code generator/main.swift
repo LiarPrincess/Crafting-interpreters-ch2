@@ -63,6 +63,11 @@ func writeExpr(to path: String) {
     Template(name: "Get", fields: [
       Field(name: "object", type: "Expr"),
       Field(name: "name",   type: "String")
+    ]),
+    Template(name: "Set", fields: [
+      Field(name: "object", type: "Expr"),
+      Field(name: "name",   type: "String"),
+      Field(name: "value",  type: "Expr")
     ])
   ]
 

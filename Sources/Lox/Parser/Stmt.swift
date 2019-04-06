@@ -3,6 +3,7 @@
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
 // swiftlint:disable superfluous_disable_command
+// swiftlint:disable file_length
 // swiftlint:disable trailing_newline
 // swiftlint:disable cyclomatic_complexity
 
