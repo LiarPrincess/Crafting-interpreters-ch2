@@ -32,8 +32,12 @@ extension Resolver {
   }
 
   func visitReturnStmt(_ stmt: ReturnStmt) throws {
-    guard self.currentFunction != .none else {
+    if self.currentFunction == .none {
       throw ResolverError.topLevelReturn
+    }
+
+    if self.currentFunction == .initializer {
+      throw ResolverError.returnInInitializer
     }
 
     if let value = stmt.value {

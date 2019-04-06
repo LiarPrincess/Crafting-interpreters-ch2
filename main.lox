@@ -173,3 +173,12 @@ class Egotist {
 }
 
 Egotist("value-5").speak();
+
+print "";
+print "> Testing 'return' inside 'init' - uncomment to get error";
+
+class Egotist {
+  init(value) {
+    // return 5;
+  }
+}

@@ -33,7 +33,7 @@ extension Resolver {
     scope.variables["this"] = VariableInfo(state: .initialized)
 
     for method in stmt.methods {
-      let type = FunctionType.method
+      let type: FunctionType = method.name == "init" ? .initializer : .method
       try self.resolveFunction(method, type: type)
     }
   }

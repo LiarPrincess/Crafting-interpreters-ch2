@@ -6,6 +6,7 @@ enum FunctionType {
   case none
   case function
   case method
+  case initializer
 }
 
 enum ClassType {
@@ -67,7 +68,11 @@ class Resolver: StmtVisitor, ExprVisitor {
   func endScope() {
     if let scope = self.scopes.last {
       for (name, variable) in scope.variables where !variable.isUsed {
-        print("Unused variable: \(name)")
+        let isThisInClass = name == "this" && self.currentClass == .class
+        if !isThisInClass {
+          // TODO: Better report unused variables
+          print("Unused variable: \(name)")
+        }
       }
     }
 
