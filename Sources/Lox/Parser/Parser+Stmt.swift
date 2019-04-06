@@ -107,7 +107,7 @@ extension Parser {
 
   private func forStatementInitializer() throws -> Stmt? {
     if self.match(.semicolon) { return nil }
-    if self.match(.var) { return try self.varDeclaration() }
+    if self.match(.var) { return try self.variableDeclaration() }
     return try self.expressionStatement()
   }
 

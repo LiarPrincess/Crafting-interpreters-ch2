@@ -2,7 +2,7 @@
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-extension Interpreter: StmtVisitor {
+extension Interpreter {
 
   func visitPrintStmt(_ stmt: PrintStmt) throws {
     let value = try self.evaluate(stmt.expr)
@@ -31,15 +31,6 @@ extension Interpreter: StmtVisitor {
     _ = try self.evaluate(stmt.expr)
   }
 
-  func visitVarStmt(_ stmt: VarStmt) throws {
-    if let initializer = stmt.initializer {
-      let value = try self.evaluate(initializer)
-      self.environment.define(stmt.name, value)
-    } else {
-      self.environment.define(stmt.name)
-    }
-  }
-
   func visitIfStmt(_ stmt: IfStmt) throws {
     let condition = try self.evaluate(stmt.condition)
 
@@ -55,11 +46,6 @@ extension Interpreter: StmtVisitor {
     while let condition = try self.evaluate(stmt.condition), self.isTruthy(condition) {
       try self.execute(stmt.body)
     }
-  }
-
-  func visitFunctionStmt(_ stmt: FunctionStmt) throws {
-    let function = Function(declaration: stmt, closure: self.environment)
-    self.environment.define(stmt.name, function)
   }
 
   func visitReturnStmt(_ stmt: ReturnStmt) throws {

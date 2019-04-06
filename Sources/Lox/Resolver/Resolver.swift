@@ -91,6 +91,11 @@ class Resolver: StmtVisitor, ExprVisitor {
     }
   }
 
+  func visitClassStmt(_ stmt: ClassStmt) throws {
+    try self.declare(stmt.name)
+    self.define(stmt.name)
+  }
+
   // MARK: - Expr
 
   func visitBoolExpr(_ expr: BoolExpr) throws { }

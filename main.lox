@@ -101,3 +101,16 @@ print "> Testing top-level return - uncomment to get error";
 {
   var unusedVariable = "5";
 }
+
+print "> Class - should print: Enjoy your breakfast, MM.";
+class Breakfast {
+  cook() {
+    print "Eggs a-fryin'!";
+  }
+
+  serve(who) {
+    print "Enjoy your breakfast, " + who + ".";
+  }
+}
+
+print Breakfast; // Prints "Breakfast".

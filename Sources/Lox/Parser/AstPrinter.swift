@@ -60,6 +60,12 @@ class AstPrinter: StmtVisitor, ExprVisitor {
     return try self.parenthesize(name: "return", exprs: exprs)
   }
 
+  func visitClassStmt(_ stmt: ClassStmt) throws -> String {
+    let name = self.parenthesize(name: "name", childs: [stmt.name])
+    let methods = try self.parenthesize(name: "methods", stmts: stmt.methods)
+    return self.parenthesize(name: "class", childs: [name, methods])
+  }
+
   // MARK: - Expressions
 
   func visitBoolExpr(_ expr: BoolExpr) throws -> String {

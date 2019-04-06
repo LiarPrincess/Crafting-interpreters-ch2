@@ -3,7 +3,11 @@
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
 private enum Value {
-  case uninitialized
+
+  /// Variable was declared but not yet initialized
+  case declared
+
+  /// Variable was declared and initialized
   case initialized(Any?)
 }
 
@@ -17,7 +21,7 @@ class Environment {
 
   /// Define uninitialized variable
   func define(_ name: String) {
-    self.values[name] = .uninitialized
+    self.values[name] = .declared
   }
 
   /// Define initialized variable
@@ -56,7 +60,7 @@ class Environment {
     if let value = self.values[name] {
       switch value {
       case let .initialized(x): return x
-      case .uninitialized: throw RuntimeError.uninitalizedVariable(name: name)
+      case .declared: throw RuntimeError.uninitalizedVariable(name: name)
       }
     }
 
@@ -78,9 +82,10 @@ class Environment {
     if let value = environment?.values[name] {
       switch value {
       case let .initialized(x): return x
-      case .uninitialized: throw RuntimeError.uninitalizedVariable(name: name)
+      case .declared: throw RuntimeError.uninitalizedVariable(name: name)
       }
     }
+
     //TODO: proper error handling
     throw RuntimeError.undefinedVariable(name: name)
   }

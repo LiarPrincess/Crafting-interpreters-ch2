@@ -2,6 +2,10 @@
 // If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
+// swiftlint:disable superfluous_disable_command
+// swiftlint:disable trailing_newline
+// swiftlint:disable cyclomatic_complexity
+
 protocol StmtVisitor {
   associatedtype StmtResult
 
@@ -21,6 +25,8 @@ protocol StmtVisitor {
   func visitFunctionStmt(_ stmt: FunctionStmt) throws -> StmtResult
   @discardableResult
   func visitReturnStmt(_ stmt: ReturnStmt) throws -> StmtResult
+  @discardableResult
+  func visitClassStmt(_ stmt: ClassStmt) throws -> StmtResult
 }
 
 extension StmtVisitor {
@@ -42,6 +48,8 @@ extension StmtVisitor {
       return try self.visitFunctionStmt(stmt)
     case let stmt as ReturnStmt:
       return try self.visitReturnStmt(stmt)
+    case let stmt as ClassStmt:
+      return try self.visitClassStmt(stmt)
     default:
       fatalError("Unknown stmt \(stmt)")
     }
@@ -167,6 +175,20 @@ class ReturnStmt: Stmt {
 
   override func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
     return try visitor.visitReturnStmt(self)
+  }
+}
+
+class ClassStmt: Stmt {
+  let name: String
+  let methods: [FunctionStmt]
+
+  init(name: String, methods: [FunctionStmt]) {
+    self.name = name
+    self.methods = methods
+  }
+
+  override func accept<V: StmtVisitor, R>(_ visitor: V) throws -> R where R == V.StmtResult {
+    return try visitor.visitClassStmt(self)
   }
 }
 

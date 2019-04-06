@@ -7,11 +7,15 @@ extension Parser {
   func declaration() -> Stmt? {
     do {
       if self.match(.var) {
-        return try self.varDeclaration()
+        return try self.variableDeclaration()
       }
 
       if self.match(.fun) {
         return try self.functionDeclaration(kind: "function")
+      }
+
+      if self.match(.class) {
+        return try self.classDeclaration()
       }
 
       return try self.statement()
@@ -22,7 +26,7 @@ extension Parser {
     }
   }
 
-  func varDeclaration() throws -> Stmt {
+  func variableDeclaration() throws -> Stmt {
     let name = try self.consumeIdentifierOrThrow()
 
     var expr: Expr?
@@ -34,7 +38,7 @@ extension Parser {
     return VarStmt(name: name, initializer: expr)
   }
 
-  func functionDeclaration(kind: String) throws -> Stmt {
+  func functionDeclaration(kind: String) throws -> FunctionStmt {
     let name = try self.consumeIdentifierOrThrow()
 
     var parameters = [String]()
@@ -54,6 +58,20 @@ extension Parser {
     let body = try self.blockStatements()
 
     return FunctionStmt(name: name, parameters: parameters, body: body)
+  }
+
+  func classDeclaration() throws -> Stmt {
+    let name = try self.consumeIdentifierOrThrow()
+    try self.consumeOrThrow(type: .leftBrace, error: .missingToken("'{'"))
+
+    var methods = [FunctionStmt]()
+    while !self.check(.rightBrace) && !self.isAtEnd {
+      let method = try self.functionDeclaration(kind: "method")
+      methods.append(method)
+    }
+
+    try self.consumeOrThrow(type: .rightBrace, error: .missingToken("'}'"))
+    return ClassStmt(name: name, methods: methods)
   }
 
   /// Consume current token if it is identifier otherwise throw .expectedIdentifier

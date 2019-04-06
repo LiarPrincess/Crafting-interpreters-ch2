@@ -6,7 +6,7 @@ protocol InterpreterType {
   func interpret(_ statements: [Stmt])
 }
 
-class Interpreter: InterpreterType {
+class Interpreter: InterpreterType, StmtVisitor, ExprVisitor {
 
   typealias StmtResult = Void
   typealias ExprResult = Any?
