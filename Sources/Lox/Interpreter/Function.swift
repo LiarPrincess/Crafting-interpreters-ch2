@@ -18,6 +18,10 @@ class Function: Callable {
     self.isInitializer = isInitializer
   }
 
+  private func getThis() throws -> Any? {
+    return try self.closure.get("this", at: 0)
+  }
+
   func call(_ interpreter: Interpreter, _ arguments: [Any?]) throws -> Any? {
     let environment = Environment(parent: self.closure)
     for (index, name) in self.declaration.parameters.enumerated() {
@@ -28,11 +32,15 @@ class Function: Callable {
       try interpreter.execute(self.declaration.body, in: environment)
     }
     catch let error as Return {
+      if self.isInitializer {
+         return try self.getThis()
+      }
+
       return error.value
     }
 
     if self.isInitializer {
-      return try self.closure.get("this", at: 0)
+      return try self.getThis()
     }
 
     return nil
