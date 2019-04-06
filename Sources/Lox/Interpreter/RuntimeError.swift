@@ -21,7 +21,7 @@ enum RuntimeError: Error, CustomStringConvertible {
     case let .invalidOperandTypes(op, left, right):
       return "Unable to perform '\(op)' with arguments of type '\(left)' and '\(right)'."
     case let .notCallable(typ):
-      return "Object of type \(typ) is not callable."
+      return "Object of type '\(typ)' is not callable."
     case let .invalidArgumentCount(expected, actuall):
       return "Invalid argument count, expected: \(expected), got: \(actuall)."
     }

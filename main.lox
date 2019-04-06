@@ -113,4 +113,6 @@ class Breakfast {
   }
 }
 
+var b = Breakfast();
 print Breakfast; // Prints "Breakfast".
+print b;

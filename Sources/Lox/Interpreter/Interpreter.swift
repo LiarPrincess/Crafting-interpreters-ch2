@@ -74,7 +74,7 @@ class Interpreter: InterpreterType, StmtVisitor, ExprVisitor {
   // MARK: - Errors
 
   func getType(_ value: Any?) -> String {
-    if value == nil { return "nil" }
-    return value.self.debugDescription
+    guard let value = value else { return "nil" }
+    return String(describing: value.self)
   }
 }
