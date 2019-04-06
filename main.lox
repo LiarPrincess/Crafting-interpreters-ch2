@@ -118,3 +118,12 @@ print b;
 b.name = "eggs";
 print b.name;
 
+print "> Class - should print: Crunch crunch crunch!";
+class Bacon {
+  eat() {
+    print "Crunch crunch crunch!";
+  }
+}
+
+var bacon = Bacon();
+bacon.eat(); // Prints "Crunch crunch crunch!".

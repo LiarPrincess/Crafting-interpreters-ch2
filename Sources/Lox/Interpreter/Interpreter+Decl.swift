@@ -20,7 +20,14 @@ extension Interpreter {
 
   func visitClassStmt(_ stmt: ClassStmt) throws {
     self.environment.define(stmt.name)
-    let klass = Class(name: stmt.name)
+
+    var methods = [String:Function]()
+    for method in stmt.methods {
+      let function = Function(declaration: method, closure: self.environment)
+      methods[method.name] = function
+    }
+
+    let klass = Class(name: stmt.name, methods: methods)
     try self.environment.assign(stmt.name, klass)
   }
 }

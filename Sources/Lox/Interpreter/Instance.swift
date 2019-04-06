@@ -15,6 +15,11 @@ class Instance {
     if let value = self.fields[name] {
       return value
     }
+
+    if let method = self.class.methods[name] {
+      return method
+    }
+
     throw RuntimeError.getUndefinedPropery(name: name)
   }
 

@@ -5,6 +5,7 @@
 enum FunctionType {
   case none
   case function
+  case method
 }
 
 class Resolver: StmtVisitor, ExprVisitor {

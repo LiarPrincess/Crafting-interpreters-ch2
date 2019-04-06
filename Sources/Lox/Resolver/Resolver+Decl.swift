@@ -22,6 +22,11 @@ extension Resolver {
   func visitClassStmt(_ stmt: ClassStmt) throws {
     try self.declare(stmt.name)
     self.define(stmt.name)
+
+    for method in stmt.methods {
+      let type = FunctionType.method
+      try self.resolveFunction(method, type: type)
+    }
   }
 
   private func resolveFunction(_ stmt: FunctionStmt, type: FunctionType) throws {
