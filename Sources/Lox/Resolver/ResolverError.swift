@@ -6,6 +6,7 @@ enum ResolverError: Error, CustomStringConvertible {
   case topLevelReturn
   case variableAlreadyDeclared(name: String)
   case variableUsedInOwnInitializer(name: String)
+  case thisUsedOutsideOfClass
 
   var description: String {
     switch self {
@@ -15,6 +16,8 @@ enum ResolverError: Error, CustomStringConvertible {
       return "Variable '\(name)' was already declared in this scope."
     case let .variableUsedInOwnInitializer(name):
       return "Cannot read variable '\(name)' in its own initializer."
+    case .thisUsedOutsideOfClass:
+      return "Cannot use 'this' outside of a class."
     }
   }
 }

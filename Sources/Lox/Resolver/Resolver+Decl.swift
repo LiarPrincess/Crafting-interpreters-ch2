@@ -20,6 +20,10 @@ extension Resolver {
   }
 
   func visitClassStmt(_ stmt: ClassStmt) throws {
+    let enclosingClass = self.currentClass
+    self.currentClass = .class
+    defer { self.currentClass = enclosingClass }
+
     try self.declare(stmt.name)
     self.define(stmt.name)
 
@@ -37,7 +41,10 @@ extension Resolver {
   private func resolveFunction(_ stmt: FunctionStmt, type: FunctionType) throws {
     let enclosingFunction = self.currentFunction
     self.currentFunction = type
+    defer { self.currentFunction = enclosingFunction }
+
     self.beginScope()
+    defer { self.endScope() }
 
     for param in stmt.parameters {
       try self.declare(param)
@@ -45,8 +52,5 @@ extension Resolver {
     }
 
     try self.resolve(stmt.body)
-
-    self.endScope()
-    self.currentFunction = enclosingFunction
   }
 }

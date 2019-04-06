@@ -63,7 +63,10 @@ extension Resolver {
   }
 
   func visitThisExpr(_ expr: ThisExpr) throws {
-    // TODO: Better
-    self.resolveLocal(expr, TokenType.this.description)
+    if self.currentClass == .none {
+      throw ResolverError.thisUsedOutsideOfClass
+    }
+
+    self.resolveLocal(expr, "this")
   }
 }

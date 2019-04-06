@@ -8,6 +8,11 @@ enum FunctionType {
   case method
 }
 
+enum ClassType {
+  case none
+  case `class`
+}
+
 class Resolver: StmtVisitor, ExprVisitor {
 
   typealias StmtResult = Void
@@ -15,7 +20,9 @@ class Resolver: StmtVisitor, ExprVisitor {
 
   let interpreter: Interpreter
   var scopes = [ScopeInfo]()
+
   var currentFunction = FunctionType.none
+  var currentClass    = ClassType.none
 
   init(_ interpreter: Interpreter) {
     self.interpreter = interpreter

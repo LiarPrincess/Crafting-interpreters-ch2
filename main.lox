@@ -141,4 +141,5 @@ class Egotist {
 var method = Egotist().speak;
 method();
 
-
+print "> Testing 'this' outside of class - uncomment to get error";
+// var a = this;
