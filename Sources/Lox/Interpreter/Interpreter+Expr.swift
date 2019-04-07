@@ -156,6 +156,29 @@ extension Interpreter {
   func visitThisExpr(_ expr: ThisExpr) throws -> Any? {
     return try self.lookUpVariable("this", expr)
   }
+
+  // TODO: Better errors
+  func visitSuperExpr(_ expr: SuperExpr) throws -> Any? {
+    guard let depth = self.locals[expr] else {
+      throw RuntimeError.getProperyOfNonObject
+    }
+
+    let superclassAny = try self.environment.get("super", at: depth)
+    guard let superclass = superclassAny as? Class else {
+      throw RuntimeError.getProperyOfNonObject
+    }
+
+    let instanceAny = try self.environment.get("this", at: depth - 1)
+    guard let instance = instanceAny as? Instance else {
+      throw RuntimeError.getProperyOfNonObject
+    }
+
+    guard let method = superclass.findMethod(expr.method) else {
+      throw RuntimeError.getProperyOfNonObject
+    }
+
+    return method.bind(instance)
+  }
 }
 
 // MARK: - Binary operations

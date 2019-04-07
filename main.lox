@@ -184,7 +184,7 @@ class Egotist {
 }
 
 print "";
-print "> Testing subtyping - should print: Fry until golden brown";
+print "> Testing subtyping - should print: 2 lines";
 
 class Doughnut {
   cook() {
@@ -192,6 +192,11 @@ class Doughnut {
   }
 }
 
-class BostonCream < Doughnut { }
+class BostonCream < Doughnut {
+  cook() {
+    super.cook();
+    print "Pipe full of custard and coat with chocolate.";
+  }
+}
 
 BostonCream().cook();

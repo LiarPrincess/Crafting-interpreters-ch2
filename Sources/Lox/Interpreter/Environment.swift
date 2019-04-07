@@ -12,7 +12,7 @@ private enum Value {
 }
 
 class Environment {
-  private let parent: Environment?
+  let parent: Environment?
   private var values = [String:Value]()
 
   init(parent: Environment? = nil) {

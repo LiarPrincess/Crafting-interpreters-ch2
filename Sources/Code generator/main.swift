@@ -69,7 +69,10 @@ func writeExpr(to path: String) {
       Field(name: "name",   type: "String"),
       Field(name: "value",  type: "Expr")
     ]),
-    Template(name: "This", fields: [])
+    Template(name: "This", fields: []),
+    Template(name: "Super", fields: [
+      Field(name: "method", type: "String")
+    ])
   ]
 
   writeFileContent("Expr", templates, to: path)

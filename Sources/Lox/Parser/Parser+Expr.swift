@@ -163,6 +163,12 @@ extension Parser {
       return GroupingExpr(expr: expr)
     }
 
+    if self.match(.super) {
+      try self.consumeOrThrow(type: .dot, error: .missingToken("'.'"))
+      let method = try self.consumeIdentifierOrThrow()
+      return SuperExpr(method: method)
+    }
+
     if self.match(.this) {
       return ThisExpr()
     }

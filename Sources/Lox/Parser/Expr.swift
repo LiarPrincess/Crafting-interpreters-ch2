@@ -39,6 +39,8 @@ protocol ExprVisitor {
   func visitSetExpr(_ expr: SetExpr) throws -> ExprResult
   @discardableResult
   func visitThisExpr(_ expr: ThisExpr) throws -> ExprResult
+  @discardableResult
+  func visitSuperExpr(_ expr: SuperExpr) throws -> ExprResult
 }
 
 extension ExprVisitor {
@@ -72,6 +74,8 @@ extension ExprVisitor {
       return try self.visitSetExpr(expr)
     case let expr as ThisExpr:
       return try self.visitThisExpr(expr)
+    case let expr as SuperExpr:
+      return try self.visitSuperExpr(expr)
     default:
       fatalError("Unknown expr \(expr)")
     }
@@ -267,6 +271,18 @@ class ThisExpr: Expr {
 
   override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
     return try visitor.visitThisExpr(self)
+  }
+}
+
+class SuperExpr: Expr {
+  let method: String
+
+  init(method: String) {
+    self.method = method
+  }
+
+  override func accept<V: ExprVisitor, R>(_ visitor: V) throws -> R where R == V.ExprResult {
+    return try visitor.visitSuperExpr(self)
   }
 }
 

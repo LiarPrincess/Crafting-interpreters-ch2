@@ -132,6 +132,10 @@ class AstPrinter: StmtVisitor, ExprVisitor {
     return self.parenthesize(name: "this", childs: [])
   }
 
+  func visitSuperExpr(_ expr: SuperExpr) throws -> String {
+    return self.parenthesize(name: "super.", childs: [expr.method])
+  }
+
   // MARK: - Parenthesize
 
   private func parenthesize(name: String, childs: [String]) -> String {

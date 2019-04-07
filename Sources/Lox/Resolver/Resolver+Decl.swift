@@ -22,7 +22,6 @@ extension Resolver {
   func visitClassStmt(_ stmt: ClassStmt) throws {
     let enclosingClass = self.currentClass
     self.currentClass = .class
-    defer { self.currentClass = enclosingClass }
 
     try self.declare(stmt.name)
     self.define(stmt.name)
@@ -35,15 +34,23 @@ extension Resolver {
       try self.resolve(superclass)
     }
 
-    let scope = self.beginScope()
-    defer { self.endScope() }
+    var superclassScope: ScopeInfo?
+    if stmt.superclass != nil {
+      superclassScope = self.beginScope()
+      superclassScope?.variables["super"] = VariableInfo(state: .initialized)
+    }
 
+    let scope = self.beginScope()
     scope.variables["this"] = VariableInfo(state: .initialized)
 
     for method in stmt.methods {
       let type: FunctionType = method.name == "init" ? .initializer : .method
       try self.resolveFunction(method, type: type)
     }
+
+    self.endScope()
+    if superclassScope != nil { self.endScope() }
+    self.currentClass = enclosingClass
   }
 
   private func resolveFunction(_ stmt: FunctionStmt, type: FunctionType) throws {

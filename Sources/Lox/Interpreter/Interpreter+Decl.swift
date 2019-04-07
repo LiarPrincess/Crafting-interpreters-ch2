@@ -23,11 +23,20 @@ extension Interpreter {
 
     self.environment.define(stmt.name)
 
+    if let superclass = superclass {
+      self.environment = Environment(parent: self.environment)
+      environment.define("super", superclass)
+    }
+
     var methods = [String:Function]()
     for method in stmt.methods {
       let isInitializer = stmt.name == "init"
       let function = Function(declaration: method, closure: self.environment, isInitializer: isInitializer)
       methods[method.name] = function
+    }
+
+    if superclass != nil {
+      self.environment = self.environment.parent!
     }
 
     let klass = Class(name: stmt.name, superclass: superclass, methods: methods)

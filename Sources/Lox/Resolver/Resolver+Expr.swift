@@ -69,4 +69,12 @@ extension Resolver {
 
     self.resolveLocal(expr, "this")
   }
+
+  func visitSuperExpr(_ expr: SuperExpr) throws {
+    if self.currentClass == .none {
+      throw ResolverError.superUsedOutsideOfClass
+    }
+
+    self.resolveLocal(expr, "super")
+  }
 }
