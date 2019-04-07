@@ -8,6 +8,7 @@ enum ResolverError: Error, CustomStringConvertible {
   case variableUsedInOwnInitializer(name: String)
   case thisUsedOutsideOfClass
   case superUsedOutsideOfClass
+  case superUsedWithoutSuperclass
   case returnInInitializer
   case selfInheritance
 
@@ -23,6 +24,8 @@ enum ResolverError: Error, CustomStringConvertible {
       return "Cannot use 'this' outside of a class."
     case .superUsedOutsideOfClass:
       return "Cannot use 'super' outside of a class."
+    case .superUsedWithoutSuperclass:
+      return "Cannot use 'super' in a class with no superclass."
     case .returnInInitializer:
       return "Cannot return a value from an initializer."
     case .selfInheritance:

@@ -75,6 +75,10 @@ extension Resolver {
       throw ResolverError.superUsedOutsideOfClass
     }
 
+    if self.currentClass == .class {
+      throw ResolverError.superUsedWithoutSuperclass
+    }
+
     self.resolveLocal(expr, "super")
   }
 }

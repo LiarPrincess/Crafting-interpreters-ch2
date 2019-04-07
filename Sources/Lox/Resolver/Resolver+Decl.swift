@@ -31,6 +31,7 @@ extension Resolver {
         throw ResolverError.selfInheritance
       }
 
+      self.currentClass = .subclass
       try self.resolve(superclass)
     }
 

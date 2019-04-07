@@ -12,6 +12,7 @@ enum FunctionType {
 enum ClassType {
   case none
   case `class`
+  case subclass
 }
 
 class Resolver: StmtVisitor, ExprVisitor {
@@ -68,8 +69,9 @@ class Resolver: StmtVisitor, ExprVisitor {
   func endScope() {
     if let scope = self.scopes.last {
       for (name, variable) in scope.variables where !variable.isUsed {
-        let isThisInClass = name == "this" && self.currentClass == .class
-        if !isThisInClass {
+        let isThisInClass = name == "this" && (self.currentClass == .class || self.currentClass == .subclass)
+        let isSuperInSublcass = name == "super" && self.currentClass == .subclass
+        if !isThisInClass && !isSuperInSublcass {
           // TODO: Better report unused variables
           print("Unused variable: \(name)")
         }
