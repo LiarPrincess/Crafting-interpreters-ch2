@@ -15,7 +15,7 @@ class Class: CustomStringConvertible {
   }
 
   func findMethod(_ name: String) -> Function? {
-    return self.methods[name]
+    return self.methods[name] ?? self.superclass?.findMethod(name)
   }
 
   var description: String {

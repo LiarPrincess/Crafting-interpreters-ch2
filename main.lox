@@ -182,3 +182,16 @@ class Egotist {
     // return 5;
   }
 }
+
+print "";
+print "> Testing subtyping - should print: Fry until golden brown";
+
+class Doughnut {
+  cook() {
+    print "Fry until golden brown.";
+  }
+}
+
+class BostonCream < Doughnut { }
+
+BostonCream().cook();
