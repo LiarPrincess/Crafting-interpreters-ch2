@@ -19,6 +19,8 @@ extension Interpreter {
   }
 
   func visitClassStmt(_ stmt: ClassStmt) throws {
+    let superclass = try self.evaluateSuperclass(stmt.superclass)
+
     self.environment.define(stmt.name)
 
     var methods = [String:Function]()
@@ -28,7 +30,20 @@ extension Interpreter {
       methods[method.name] = function
     }
 
-    let klass = Class(name: stmt.name, methods: methods)
+    let klass = Class(name: stmt.name, superclass: superclass, methods: methods)
     try self.environment.assign(stmt.name, klass)
+  }
+
+  private func evaluateSuperclass(_ variable: VariableExpr?) throws -> Class? {
+    guard let variable = variable else {
+      return nil
+    }
+
+    let anySuperclass = try self.evaluate(variable)
+    guard let superclass = anySuperclass as? Class else {
+      throw RuntimeError.superIsNotClass
+    }
+
+    return superclass
   }
 }

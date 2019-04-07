@@ -109,6 +109,7 @@ func writeStmt(to path: String) {
     ]),
     Template(name: "Class", fields: [
       Field(name: "name", type: "String"),
+      Field(name: "superclass", type: "VariableExpr?"),
       Field(name: "methods", type: "[FunctionStmt]")
     ])
   ]

@@ -12,6 +12,7 @@ enum RuntimeError: Error, CustomStringConvertible {
   case getProperyOfNonObject
   case getUndefinedPropery(name: String)
   case setProperyOfNonObject
+  case superIsNotClass
 
   var description: String {
     switch self {
@@ -33,6 +34,8 @@ enum RuntimeError: Error, CustomStringConvertible {
       return "Undefined property '\(name)'."
     case .setProperyOfNonObject:
       return "Only instances have fields."
+    case .superIsNotClass:
+      return "Superclass must be a class."
     }
   }
 }

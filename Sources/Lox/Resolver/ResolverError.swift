@@ -8,6 +8,7 @@ enum ResolverError: Error, CustomStringConvertible {
   case variableUsedInOwnInitializer(name: String)
   case thisUsedOutsideOfClass
   case returnInInitializer
+  case selfInheritance
 
   var description: String {
     switch self {
@@ -21,6 +22,8 @@ enum ResolverError: Error, CustomStringConvertible {
       return "Cannot use 'this' outside of a class."
     case .returnInInitializer:
       return "Cannot return a value from an initializer."
+    case .selfInheritance:
+      return "A class cannot inherit from itself."
     }
   }
 }

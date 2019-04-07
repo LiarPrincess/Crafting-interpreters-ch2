@@ -182,10 +182,12 @@ class ReturnStmt: Stmt {
 
 class ClassStmt: Stmt {
   let name: String
+  let superclass: VariableExpr?
   let methods: [FunctionStmt]
 
-  init(name: String, methods: [FunctionStmt]) {
+  init(name: String, superclass: VariableExpr?, methods: [FunctionStmt]) {
     self.name = name
+    self.superclass = superclass
     self.methods = methods
   }
 

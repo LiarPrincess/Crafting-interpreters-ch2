@@ -27,6 +27,14 @@ extension Resolver {
     try self.declare(stmt.name)
     self.define(stmt.name)
 
+    if let superclass = stmt.superclass {
+      if superclass.name == stmt.name {
+        throw ResolverError.selfInheritance
+      }
+
+      try self.resolve(superclass)
+    }
+
     let scope = self.beginScope()
     defer { self.endScope() }
 

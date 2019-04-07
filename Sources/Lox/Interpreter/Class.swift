@@ -5,10 +5,12 @@
 class Class: CustomStringConvertible {
 
   let name: String
+  let superclass: Class?
   let methods: [String:Function]
 
-  init(name: String, methods: [String:Function]) {
+  init(name: String, superclass: Class?, methods: [String:Function]) {
     self.name = name
+    self.superclass = superclass
     self.methods = methods
   }
 

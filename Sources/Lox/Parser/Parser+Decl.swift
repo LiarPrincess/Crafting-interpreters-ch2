@@ -62,6 +62,13 @@ extension Parser {
 
   func classDeclaration() throws -> Stmt {
     let name = try self.consumeIdentifierOrThrow()
+
+    var superclass: VariableExpr?
+    if self.match(.less) {
+      let superclassName = try self.consumeIdentifierOrThrow()
+      superclass = VariableExpr(name: superclassName)
+    }
+
     try self.consumeOrThrow(type: .leftBrace, error: .missingToken("'{'"))
 
     var methods = [FunctionStmt]()
@@ -71,6 +78,6 @@ extension Parser {
     }
 
     try self.consumeOrThrow(type: .rightBrace, error: .missingToken("'}'"))
-    return ClassStmt(name: name, methods: methods)
+    return ClassStmt(name: name, superclass: superclass, methods: methods)
   }
 }
